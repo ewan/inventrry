@@ -1,0 +1,12 @@
+Package: inventrry
+Type: Package
+Title: Human sound inventory measures
+Version: 0.0.0.9000
+Date: 2016-07-01
+Authors@R: person("Ewan", "Dunbar", email="emd@umd.edu", role=c("aut", "cre"))
+Description: Geometric statistics for economy and symmetry in sound inventories
+License: GPLv3
+LazyData: TRUE
+Depends: PythonInR
+RoxygenNote: 5.0.1
+SystemRequirements: python FIXME DEPENDENCIES
