@@ -63,7 +63,7 @@ def to_row_partition(table):
 class PartitionCached(object):
     def __init__(self, table):
         self.table = table
-        self.cache = {}
+        self.cache = set()
         
     def has(self, t):
         return t in self.cache
@@ -93,7 +93,7 @@ class PartitionCached(object):
             return self.get((split_on,))
         if split_on in cols:
             return self.get(cols)
-        t = tuple(cols.union({split_on}))
+        t = tuple(cols.union(set(split_on)))
         if not self.has(t):
             vec = self.table[:,split_on]
             new_partition = []
@@ -114,7 +114,7 @@ class PartitionCached(object):
             return existing
         if collapse_on not in cols:
             return existing
-        t = tuple(cols - {collapse_on})
+        t = tuple(cols - set(collapse_on))
         if not self.has(t):
             new_partition = existing[:]
             vec = self.table[:,collapse_on]

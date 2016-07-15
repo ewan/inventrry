@@ -109,11 +109,11 @@ def add_all(s, features, explored, partitions):
             * add some segments beyond those already picked out by `s`
             * can specify the inventory
     """
-    result = [s | {f} for f in features if\
-              not f in s and\
-              not contains_one(s | {f}, explored) and\
-              is_rank_increase(s, f, partitions) and\
-              is_rank_more_than_one(s | {f}, partitions)]
+    result = [s | set(f) for f in features if
+              not f in s and
+              not contains_one(s | set(f), explored) and
+              is_rank_increase(s, f, partitions) and
+              is_rank_more_than_one(s | set(f), partitions)]
     return result
 
 def add_all_collapse(sets, features, explored, partitions):
@@ -192,7 +192,7 @@ def can_contract(s, unexplored, explored, infeasible, partitions):
     has_feasible = False
     infeasible_ = []
     for f in s:
-        t =  s - {f}
+        t =  s - set(f)
         if is_feasible_unexplored(t, unexplored, explored, infeasible,
                 partitions):
             has_feasible = True
@@ -205,7 +205,7 @@ def contract(s, unexplored, explored, infeasible, partitions):
     feasible = []
     infeasible_ = []
     for f in s:
-        t =  s - {f}
+        t =  s - set(f)
         if is_feasible_unexplored(t, unexplored, explored, infeasible,
                 partitions):
             feasible.append(t)
