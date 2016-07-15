@@ -8,7 +8,11 @@
   PythonInR::pyOptions("usePandas", TRUE)
   PythonInR::pyOptions("pandasAlias", "pd")
   tryCatch(
-    PythonInR::pyImport("specs"),
+    {
+      PythonInR::pyImport("specs")
+      PythonInR::pyImport("mpairs")
+      PythonInR::pyImport("imbalance")
+    },
     error=function(e) warning("Error loading Python module: nothing will work", call.=F)
   )
 }

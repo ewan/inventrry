@@ -1,3 +1,5 @@
+import sys
+import argparse
 import numpy as np
 from partition import PartitionCached
 
@@ -348,7 +350,7 @@ class MinimalSetIterator(object):
         self.features = range(inventory.shape[1])
         if max_cost < inventory.shape[0]:
             raise ValueError()
-        self.max_num_sets_to_expand = int(max_cost // inventory.shape[0])
+        self.max_num_sets_to_expand = max_cost / inventory.shape[0]
         self.partitions = PartitionCached(inventory)
         self.seed = seed
     
@@ -396,10 +398,46 @@ class MinimalSetIterator(object):
         return self.minimal.pop()
 
 def specs(inventory, max_cost, seed):
+    if max_cost < float("inf"):
+        max_cost = int(max_cost)
+    if seed is not None:
+        seed = int(seed)
     ms_iterator = MinimalSetIterator(inventory, max_cost, seed)
     indices = range(inventory.shape[1])
     result = []
     for ms in ms_iterator:
-        result.append(np.in1d(indices, list(ms)).tolist())
+        result.append(list(ms))
     return result
 
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--max-cost', type=float,
+                        default=float("inf"))
+    parser.add_argument('--seed', type=int, default=None)
+    parser.add_argument('inventory_fn',
+                        help='csv containing features for a single inventory,'
+                        ' with header, coded numerically')
+    args = parser.parse_args(sys.argv[1:])
+    inventory = np.genfromtxt(args.inventory_fn, delimiter=',', names=True)
+    nfeat = len(inventory.dtype)
+    feature_names = inventory.dtype.names
+    inventory.dtype = None
+    nsegs = len(inventory)/nfeat
+    inventory.shape = (nsegs,23)
+    specs_ = get_specs(inventory, args.max_cost, args.seed)
+    row = ""
+    prefix = ""
+    for fname in feature_names:
+        row += prefix + fname
+        prefix = ","
+    print row
+    for s in specs_:
+        row = ""
+        prefix = ""
+        for i in range(len(feature_names)):
+            if feature_names[i] in s:
+                row += prefix + "T"
+            else:
+                row += prefix + "F"
+            prefix = ","
+        print row
