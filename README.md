@@ -12,7 +12,7 @@ If you're on a Mac, even that isn't enough, because (as far as I can see) the li
     install_name_tool -change "/System/Library/Frameworks/Python.framework/Versions/2.7/Python" "/Users/emd/anaconda/lib/libpython2.7.dylib" /Library/Frameworks/R.framework/Versions/3.2/Resources/library/PythonInR/libs/PythonInR.so 
 Where the first argument is the original reference spit out by the linker (which you can see using `otool -g`), the second argument is what I need to change it to, and the third argument is the location of the installed shared object file.
 
-It is then *absolutely essential* that, before running anything with PythonInR, you set the PYTHONHOME environment variable to the folder containing the version of Python you're using.
+It is then **absolutely essential** that, **before loading** PythonInR, you set the PYTHONHOME environment variable to the folder containing the version of Python you're using.
 
     Sys.setenv(PYTHONHOME="/Users/emd/anaconda")
 
