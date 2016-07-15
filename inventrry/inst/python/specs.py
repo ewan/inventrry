@@ -109,10 +109,10 @@ def add_all(s, features, explored, partitions):
             * add some segments beyond those already picked out by `s`
             * can specify the inventory
     """
-    result = [s | {f} for f in features if
-              not f in s and
-              not contains_one(s | {f}, explored) and
-              is_rank_increase(s, f, partitions) and
+    result = [s | {f} for f in features if\
+              not f in s and\
+              not contains_one(s | {f}, explored) and\
+              is_rank_increase(s, f, partitions) and\
               is_rank_more_than_one(s | {f}, partitions)]
     return result
 
