@@ -1,6 +1,6 @@
 #inventrry
 
-R package for calculating geometry statistics of sound inventories (or in fact any set that comes with a binary encoding.
+R package for calculating geometry statistics of sound inventories (or in fact any set that comes with a binary encoding).
 
 ###Setup
 
