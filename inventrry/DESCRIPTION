@@ -9,4 +9,4 @@ License: GPLv3
 LazyData: TRUE
 Depends: PythonInR
 RoxygenNote: 5.0.1
-SystemRequirements: python FIXME DEPENDENCIES
+SystemRequirements: Python with numpy
