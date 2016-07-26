@@ -109,11 +109,11 @@ def add_all(s, features, explored, partitions):
             * add some segments beyond those already picked out by `s`
             * can specify the inventory
     """
-    result = [s | set(f) for f in features if
+    result = [s | set([f]) for f in features if
               not f in s and
-              not contains_one(s | set(f), explored) and
+              not contains_one(s | set([f]), explored) and
               is_rank_increase(s, f, partitions) and
-              is_rank_more_than_one(s | set(f), partitions)]
+              is_rank_more_than_one(s | set([f]), partitions)]
     return result
 
 def add_all_collapse(sets, features, explored, partitions):
