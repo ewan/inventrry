@@ -435,7 +435,7 @@ if __name__ == "__main__":
         row = ""
         prefix = ""
         for i in range(len(feature_names)):
-            if feature_names[i] in s:
+            if i in s:
                 row += prefix + "T"
             else:
                 row += prefix + "F"

@@ -4,9 +4,12 @@ specs <- function(feat, max_cost=Inf, seed=NULL) {
   PythonInR::pySet("max_cost", max_cost)
   PythonInR::pySet("seed", seed)
   PythonInR::pyExec("l = specs.specs(feat, max_cost, seed)")
-  l <- PythonInR::pyGet("l", simplify=T)
+  l <- PythonInR::pyGet("l", simplify=F)
+  if (length(l) > 0) {
+    l <- PythonInR::pyGet("l", simplify=T)
+  }
   fnames <- colnames(feat)
-  result <- lapply(l, function(x) fnames[x])
+  result <- lapply(l, function(x) fnames[x+1])
   return(result)
 }
 
