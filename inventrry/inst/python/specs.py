@@ -424,7 +424,7 @@ if __name__ == "__main__":
     inventory.dtype = None
     nsegs = len(inventory)/nfeat
     inventory.shape = (nsegs,23)
-    specs_ = get_specs(inventory, args.max_cost, args.seed)
+    specs_ = specs(inventory, args.max_cost, args.seed)
     row = ""
     prefix = ""
     for fname in feature_names:
