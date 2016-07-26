@@ -3,3 +3,4 @@
 .RData
 inventrry.Rproj
 python_old
+*.pyc
