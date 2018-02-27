@@ -1,4 +1,5 @@
 from util import binary_counts
+from util import otn
 
 def imbalance(feature_values):
     '''
@@ -9,3 +10,12 @@ def imbalance(feature_values):
         return None
     else:
         return abs(n_minus - n_plus)
+
+def nimbalance( values, specs ) :
+	trueSpec = []
+
+	total = 0
+	for i in trueSpec :
+		total+= binary_counts(otn(values[i]))
+	return total
+	    

@@ -6,6 +6,12 @@ Created on 2015-05-18
 
 import numpy as np
 
+def otn(operators):
+    k = operators
+    k.replace(to_replace = '+', value=1, inplace = True)
+    k.replace(to_replace = '-', value=-1, inplace = True)
+    return k
+
 def get_cols_except(matrix, cols, no_go_col):
     cols_to_get = tuple([c for c in cols if c != no_go_col])
     return matrix[:,cols_to_get]
