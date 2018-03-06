@@ -7,9 +7,16 @@ Created on 2015-05-18
 import numpy as np
 
 def otn(operators):
+    '''
+        Trasforme une Serie au format (+/-) en une Serie au format(1/-1)
+
+        :param operators: Une Serie au format (+/-)
+        :return: Une Serie au format (1/-1)
+
+    '''
     k = operators
-    k.replace(to_replace = '+', value=1, inplace = True)
-    k.replace(to_replace = '-', value=-1, inplace = True)
+    k = k.replace(to_replace = '+', value=1)
+    k = k.replace(to_replace = '-', value=-1)
     return k
 
 def get_cols_except(matrix, cols, no_go_col):
