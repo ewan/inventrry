@@ -22,7 +22,7 @@ def otn(operators):
 def get_cols_except(matrix, cols, no_go_col):
     print(cols)
     print(len(cols))
-    cols_to_get = tuple([c for c in cols if c != no_go_col])
+    cols_to_get = tuple([c for c in cols.keys() if c != no_go_col])
     print("####cols_to_get : ####")
     print(cols_to_get)
     print(len(cols_to_get))
