@@ -20,7 +20,15 @@ def otn(operators):
     return k
 
 def get_cols_except(matrix, cols, no_go_col):
+    print(cols)
+    print(len(cols))
     cols_to_get = tuple([c for c in cols if c != no_go_col])
+    print("####cols_to_get : ####")
+    print(cols_to_get)
+    print(len(cols_to_get))
+    print("####Test Matrix: ####")
+    print(matrix[:,cols_to_get])
+    print("####End Test####")
     return matrix[:,cols_to_get]
 
 def binary_counts(vec):
