@@ -6,17 +6,17 @@ Created on 2015-05-18
 
 import numpy as np
 
-def clean(dictio):
+def getTrueSpecs(dictio):
     '''
         Wipe out all entries of a dictionnay which are not exactly True or False 
         :param dictio: the dictionnary to clean
     '''
     tmp = []
     for f in dictio :
-        if ((str(dictio[f]) != "True") and (str(dictio[f]) != "False") ):
-            tmp.append(f)
-    for k in tmp:
-        dictio.pop(k,None)
+        if ((type(dictio[f]) == np.bool_) or (type(dictio[f]) == bool)):
+            if(dictio[f]):
+                tmp.append(f)
+    return tmp
 
 def otn(operators):
     '''
@@ -33,11 +33,14 @@ def otn(operators):
 
 def get_cols_except(matrix, cols, no_go_col):
     '''
-        :param matrix:
-        :param cols:
-        :param no_go_col:
+        :param matrix: A language inventory
+        :param cols: the cols to get.
+        :param no_go_col: the string to remove of the cols.
+        :type matrix: pandas.DataFrame
+        :type cols: List
+        :type no_go_col: string
     '''
-    cols_to_get = tuple([c for c in cols.keys() if c != no_go_col])
+    cols_to_get = tuple([c for c in cols if c != no_go_col])
     return matrix.loc[:,cols_to_get]
 
 def binary_counts(vec):

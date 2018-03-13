@@ -3,27 +3,28 @@ from partition import to_row_partition
 
 def mpairs(inventory, spec, feature):
     '''
-    	:param inventory:
-		:param spec:
-		:param feature:
+    	Calculate the number of phonem which are distinct only by the specified feature 
+    	
+    	:param inventory: A inventory of a langage
+		:param spec: A string List representing discriminating features 
+		:param feature: a specific feature which has to be tested
 		:type inventory: pandas.DataFrame
-		:type spec: Dictionary
+		:type spec: List
 		:type feature: String
     '''
     if inventory.shape[0] == 2 and len(spec) == 1:
         return 1
-    tmp = get_cols_except(inventory, spec, feature)
-    #print(tmp)
     partition = to_row_partition(get_cols_except(inventory, spec, feature))
     n_equivalence_classes = len(partition)
     return inventory.shape[0] - n_equivalence_classes
 
 def nmpairs(inventory, spec):
 	'''
-		:param inventory:
-		:param spec:
+		Calculate the number of phonem which are distinct only by the specified feature 
+    	
+    	:param inventory: A inventory of a langage
+		:param spec: A string List representing discriminating features 
 		:type inventory: pandas.DataFrame
-		:type spec: Dictionary
+		:type spec: list
 	'''
-	trueSpec = [f for f in spec.keys() if spec[f]]
-	return sum(mpairs(inventory, spec, feat) for feat in trueSpec)
+	return sum(mpairs(inventory, spec, feat) for feat in spec)
