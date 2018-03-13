@@ -14,8 +14,4 @@ def mpairs(inventory, spec, feature):
 def nmpairs(inventory, spec):
 	trueSpec = [f for f in spec.iloc[:][4:27].keys() if spec.iloc[:][f]]
 	
-	print('####trueSpec : ####')
-	print(trueSpec)
-	
-	mpairs(inventory, spec[4:27], trueSpec[0])
-	#return sum(mpairs(inventory, spec, feat) for feat in trueSpec)
+	return sum(mpairs(inventory, spec[4:27], feat) for feat in trueSpec)

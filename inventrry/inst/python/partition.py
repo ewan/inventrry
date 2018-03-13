@@ -41,7 +41,7 @@ def to_row_partition(table):
         if len(table.shape) == 1:
             vec = table
         else:
-            vec = table[:,0]
+            vec = table.loc[:,0]
         values = np.unique(vec)
         partition = [np.where(vec == v)[0].tolist() for v in values]
         result = [s for s in partition if s]
@@ -52,7 +52,7 @@ def to_row_partition(table):
         rows = []
         for i in range(table.shape[0]):
             try:
-                row_i = table[i,:]
+                row_i = table.loc[i,:]
                 j_existing = search_npvec(row_i, rows)
                 result[j_existing].append(i)
             except ValueError:
