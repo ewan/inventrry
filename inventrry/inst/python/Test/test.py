@@ -9,7 +9,9 @@ import util as ut
 invTest = pd.read_csv("aarInv.csv")
 specTest = pd.read_csv("aarSpecs.csv")
 
-who = invTest.loc[invTest['segment_type']=='Whole']
-spe0 = specTest.iloc[0]
+who = invTest.loc[invTest['segment_type']=='Consonant']
+spe0 = specTest.iloc[0].to_dict()
+ut.clean(spe0)
 nmp = mp.nmpairs(who, spe0)
 print(nmp)
+

@@ -6,6 +6,18 @@ Created on 2015-05-18
 
 import numpy as np
 
+def clean(dictio):
+    '''
+        Wipe out all entries of a dictionnay which are not exactly True or False 
+        :param dictio: the dictionnary to clean
+    '''
+    tmp = []
+    for f in dictio :
+        if ((str(dictio[f]) != "True") and (str(dictio[f]) != "False") ):
+            tmp.append(f)
+    for k in tmp:
+        dictio.pop(k,None)
+
 def otn(operators):
     '''
         Trasforme une Serie au format (+/-) en une Serie au format(1/-1)
@@ -20,6 +32,11 @@ def otn(operators):
     return k
 
 def get_cols_except(matrix, cols, no_go_col):
+    '''
+        :param matrix:
+        :param cols:
+        :param no_go_col:
+    '''
     cols_to_get = tuple([c for c in cols.keys() if c != no_go_col])
     return matrix.loc[:,cols_to_get]
 
