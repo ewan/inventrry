@@ -6,6 +6,33 @@ Created on 2015-05-18
 
 import numpy as np
 
+def normDatas(normTab, size, nfeat, nmpairs = None):
+	'''
+		Normalize a array of values into its [0-1] equivalent
+		:param normTab: the normalization array
+		:param size: index
+		:param nfeat: index
+		:param nmpairs: optional index
+		:type normTab: pandas.DataFrame
+		:type size: int
+		:type nfeat: int
+		:type nmpairs: int
+		:return: the dictionnary which associtate each number with a 0-1 double 
+		:rtype: dictionarry
+
+	'''
+	if nmpairs is None :
+		dictValues = normTab.loc[(normTab["size"] == size) & (normTab["nfeat"] == nfeat), "nmpairs"].tolist()
+	else : 
+		dictValues = normTab.loc[(normTab["size"] == size) & (normTab["nfeat"] == nfeat) & (normTab["nmpairs"] == nmpairs), "nimbalance"].tolist()
+	normList = sorted(set(dictValues))
+	dictNorm = {}
+	length = len(normList)
+	for i in range(length):
+		dictNorm[normList[i]] = i/(length-1)
+	return dictNorm
+
+
 def getTrueSpecs(dictio):
     '''
         Wipe out all entries of a dictionnay which are not exactly True or False 

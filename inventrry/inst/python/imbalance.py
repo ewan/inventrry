@@ -21,6 +21,6 @@ def nimbalance( values, spec ) :
 		:return: le nombre d'opposition 
 	'''
 	total = 0
-	for i in trueSpec :
+	for i in spec :
 		total += imbalance(otn(values[i]))
 	return total
