@@ -6,13 +6,24 @@ Created on 2015-05-18
 
 import numpy as np
 
-def normDatas(normTab, size, nfeat, nmpairs = None):
+def sebHash( tab ) : 
+	l = len(tab)
+	r = 1
+	for i in range(l) :
+		r = r*10
+		if tab[i] == '-':
+			r+=1
+	return r
+
+def normDatas(value, normTab, size, nfeat, nmpairs = None):
 	'''
-		Normalize a array of values into its [0-1] equivalent
+		Normalize a array of values into its [0-1] equivalent. If nmpairs has only one possibility and nimbalance is asked, return None 
+		:param value: the value to normalize 
 		:param normTab: the normalization array
 		:param size: index
 		:param nfeat: index
 		:param nmpairs: optional index
+		:type value: int
 		:type normTab: pandas.DataFrame
 		:type size: int
 		:type nfeat: int
@@ -26,12 +37,10 @@ def normDatas(normTab, size, nfeat, nmpairs = None):
 	else : 
 		dictValues = normTab.loc[(normTab["size"] == size) & (normTab["nfeat"] == nfeat) & (normTab["nmpairs"] == nmpairs), "nimbalance"].tolist()
 	normList = sorted(set(dictValues))
-	dictNorm = {}
 	length = len(normList)
-	for i in range(length):
-		dictNorm[normList[i]] = i/(length-1)
-	return dictNorm
-
+	if length == 1 :
+		return np.nan
+	return normList.index(value)/(length-1)
 
 def getTrueSpecs(dictio):
     '''

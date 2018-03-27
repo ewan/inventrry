@@ -23,8 +23,8 @@ def stats (inv, tspec, tab) :
 	nbMpairs = mp.nmpairs(inv, tspec)
 	nbImbalance = ib.nimbalance(inv, tspec)
 	econ = econValue(size, nfeat)
-	loc = (ut.normDatas(tab, size, nfeat))[nbMpairs]
-	glob = (ut.normDatas(tab, size, nfeat,nbMpairs))[nbImbalance]
+	loc = ut.normDatas(nbMpairs, tab, size, nfeat)
+	glob = ut.normDatas(nbImbalance, tab, size, nfeat,nbMpairs)
 	return (econ, loc, glob)
 
 def econ(inv, tspec) : 

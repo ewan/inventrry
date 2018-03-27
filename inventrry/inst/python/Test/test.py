@@ -26,10 +26,11 @@ def script( sType, invTest, specTest, normTab ) :
 			mainDict[t]['l'].append(l)
 			mainDict[t]['g'].append(g)
 		for i in mainDict[t] :
-			mainDict[t][i] = np.median(mainDict[t][i])
+			mainDict[t][i] = np.nanmedian(mainDict[t][i])
 	return mainDict
 
 test = script(sType, invTest, specTest, normTab)
+print(test)
 '''
 who = invTest.loc[invTest['segment_type']=='Stop/affricate']
 spe = []
