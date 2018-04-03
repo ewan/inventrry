@@ -14,7 +14,7 @@ normTab = pd.read_feather("geoms.feather")
 sType = ['Whole', 'Consonant','Stop/affricate', 'Vowel']
 
 def script( sType, invTest, specTest, normTab ) : 
-	language = set(invTest['language'].values)
+	language = set(specTest['language'].values)
 	mainDict = {}
 	for lang in language :
 		mainDict[lang]={}
