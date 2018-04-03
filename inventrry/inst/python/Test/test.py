@@ -14,35 +14,35 @@ normTab = pd.read_feather("geoms.feather")
 sType = ['Whole', 'Consonant','Stop/affricate', 'Vowel']
 
 def script( sType, invTest, specTest, normTab ) : 
+	language = set(invTest['language'].values)
 	mainDict = {}
-	for t in sType :
-		mainDict[t] = {'e' : [] , 'l' : [], 'g' : []}
-		inv = invTest.loc[invTest['segment_type']==t]
-		spe = specTest.loc[specTest['segment_type']==t]
-		l = spe.shape[0] 
-		for spec in range(l) : 
-			e, l, g = st.stats(inv, (ut.getTrueSpecs(spe.iloc[spec].to_dict())),normTab)
-			mainDict[t]['e'].append(e)
-			mainDict[t]['l'].append(l)
-			mainDict[t]['g'].append(g)
-		for i in mainDict[t] :
-			mainDict[t][i] = np.nanmedian(mainDict[t][i])
+	for lang in language :
+		mainDict[lang]={}
+		for t in sType :
+			mainDict[lang][t] = {'Econ' : [] , 'Loc' : [], 'Glob' : []}
+			inv = invTest.loc[(invTest['segment_type']==t) & (invTest['language']==lang)]
+			spe = specTest.loc[(specTest['segment_type']==t) & (specTest['language']==lang)]
+			leng = spe.shape[0] 
+			for spec in range(leng) : 
+				e, l, g = st.stats(inv, (ut.getTrueSpecs(spe.iloc[spec].to_dict())),normTab)
+				mainDict[lang][t]['Econ'].append(e)
+				mainDict[lang][t]['Loc'].append(l)
+				mainDict[lang][t]['Glob'].append(g)
+			for i in mainDict[lang][t] :
+				mainDict[lang][t][i] = np.nanmedian(mainDict[lang][t][i])
 	return mainDict
 
-test = script(sType, invTest, specTest, normTab)
-print(test)
-'''
-who = invTest.loc[invTest['segment_type']=='Stop/affricate']
-spe = []
-for i in range(145,150) :
-	spe.append(ut.getTrueSpecs(specTest.iloc[i].to_dict()))
-test = {'e' : [] , 'l' : [], 'g' : []}
-for spec in spe : 
-	e,l, g = st.stats(who, spec, normTab) 
-	test['e'].append(e)
-	test['l'].append(l)
-	test['g'].append(g)
+def generateDataFrame(dict):
+	ret = pd.DataFrame(columns = ['Language','Type','Econ','Loc','Glob'])
+	for l in dict :
+		for t in dict[l]:
+			master = {'Language' : l, 'Type' : t}
+			all = {**master,**dict[l][t]}
+			ret = ret.append(all, ignore_index=True)
+	ret = ret[['Language','Type','Econ','Loc','Glob']]
+	return ret
+	
+dict = script(sType, invTest, specTest, normTab)
 
-for i in test :
-	print(np.median(test[i]))
-'''
+test = generateDataFrame(dict)
+test.to_csv('aarScore.csv')
