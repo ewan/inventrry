@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import numpy as np
-
+import argparse
 import pandas as pd
 import pyinventrry as pi
 import pyinventrry.util as ut
@@ -39,3 +39,17 @@ def generateDataFrame(dict):
 
 def writeScore(dict, filename) : 
 	(generateDataFrame(dict)).to_csv(filename)
+
+if __name__ == "__main__":
+	parser = argparse.ArgumentParser()
+	parser.add_argument("inventory", help = 'A csv file with the correct format for the inventory')
+	parser.add_argument("specs", help = 'A csv file with the correct format for the specs')
+	parser.add_argument("normTab", help = 'A file used for normalize data (actually in feather format)')
+	#parser.add_argument('--max-cost', type=float,
+	#					default=float("inf"))
+	#parser.add_argument('--seed', type=int, default=None)
+	#parser.add_argument('inventory_fn',
+	#					help='csv containing features for a single inventory,'
+	#					' with header, coded numerically')
+	args = parser.parse_args(sys.argv[1:])
+
