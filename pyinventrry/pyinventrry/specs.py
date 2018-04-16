@@ -430,7 +430,6 @@ if __name__ == "__main__":
     for fname in feature_names:
         row += prefix + fname
         prefix = ","
-    print row
     for s in specs_:
         row = ""
         prefix = ""
@@ -440,4 +439,3 @@ if __name__ == "__main__":
             else:
                 row += prefix + "F"
             prefix = ","
-        print row
