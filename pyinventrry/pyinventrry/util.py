@@ -4,7 +4,7 @@ Created on 2015-05-18
 @author: emd
 '''
 
-import numpy as np
+import numpy as _np
 
 def sebHash( tab ) : 
 	l = len(tab)
@@ -33,13 +33,18 @@ def normDatas(value, normTab, size, nfeat, nmpairs = None):
 
 	'''
 	if nmpairs is None :
-		dictValues = normTab.loc[(normTab["size"] == size) & (normTab["nfeat"] == nfeat), "nmpairs"].tolist()
+		dictValues = normTab.loc[
+			(normTab["size"] == size) 
+			& (normTab["nfeat"] == nfeat), "nmpairs"].tolist()
 	else : 
-		dictValues = normTab.loc[(normTab["size"] == size) & (normTab["nfeat"] == nfeat) & (normTab["nmpairs"] == nmpairs), "nimbalance"].tolist()
+		dictValues = normTab.loc[
+			(normTab["size"] == size) 
+			& (normTab["nfeat"] == nfeat) 
+			& (normTab["nmpairs"] == nmpairs), "nimbalance"].tolist()
 	normList = sorted(set(dictValues))
 	length = len(normList)
 	if length == 1 :
-		return np.nan
+		return _np.nan
 	return normList.index(value)/(length-1)
 
 def getTrueSpecs(dictio):
@@ -49,7 +54,7 @@ def getTrueSpecs(dictio):
     '''
     tmp = []
     for f in dictio :
-        if ((type(dictio[f]) == np.bool_) or (type(dictio[f]) == bool)):
+        if ((type(dictio[f]) == _np.bool_) or (type(dictio[f]) == bool)):
             if(dictio[f]):
                 tmp.append(f)
     return tmp

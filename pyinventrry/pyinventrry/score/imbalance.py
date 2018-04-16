@@ -1,4 +1,4 @@
-from pyinventrry.util import *
+from pyinventrry.util import binary_counts as _bc, otn as _otn
 
 def imbalance(feature_values):
     '''
@@ -6,7 +6,7 @@ def imbalance(feature_values):
     	:param feature_values: Une Serie au format (1/-1)
     
     '''
-    n_minus, n_plus = binary_counts(feature_values)
+    n_minus, n_plus = _bc(feature_values)
     if n_minus == 0 or n_plus == 0:
         return None
     else:
@@ -21,5 +21,5 @@ def nimbalance( values, spec ) :
 	'''
 	total = 0
 	for i in spec :
-		total += imbalance(otn(values[i]))
+		total += imbalance(_otn(values[i]))
 	return total

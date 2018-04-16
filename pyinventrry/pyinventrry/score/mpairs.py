@@ -1,4 +1,4 @@
-from pyinventrry.util import *
+from pyinventrry.util import sebHash as _sh, get_cols_except as _gce
 
 def mpairs(inventory, spec, feature):
     '''
@@ -13,10 +13,10 @@ def mpairs(inventory, spec, feature):
     '''
     if inventory.shape[0] == 2 and len(spec) == 1:
         return 1
-    partition = get_cols_except(inventory, spec, feature).values.tolist()
+    partition = _gce(inventory, spec, feature).values.tolist()
     test = set()
     for i in partition : 
-    	test.add(sebHash(i))
+    	test.add(_sh(i))
     return inventory.shape[0] - len(test)
 
 def nmpairs(inventory, spec):
@@ -28,4 +28,4 @@ def nmpairs(inventory, spec):
 		:type inventory: pandas.DataFrame
 		:type spec: list
 	'''
-	return sum(mpairs(inventory, spec, feat) for feat in spec)
+/bin/bash: q: command not found

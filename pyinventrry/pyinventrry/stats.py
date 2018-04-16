@@ -1,9 +1,9 @@
 __all__ = ['stat', 'econ', 'loc', 'glob']
 
-import pandas as pd 
-import pyinventrry.mpairs as mp
-import pyinventrry.imbalance as ib
-import pyinventrry.util as ut
+import pyinventry.score.ecovalue as _ev
+import pyinventrry.score.mpairs as _mp
+import pyinventrry.score.imbalance as _ib
+import pyinventrry.util as _ut
 
 def stat (inv, tspec, tab) :
 	'''
@@ -20,13 +20,11 @@ def stat (inv, tspec, tab) :
 		:rtype: double tuple
 
 	'''
-	size = inv.shape[0]
-	nfeat = len(tspec)
-	nbMpairs = mp.nmpairs(inv, tspec)
-	nbImbalance = ib.nimbalance(inv, tspec)
-	econ = econValue(size, nfeat)
-	loc = ut.normDatas(nbMpairs, tab, size, nfeat)
-	glob = ut.normDatas(nbImbalance, tab, size, nfeat,nbMpairs)
+	nbMpairs = _mp.nmpairs(inv, tspec)
+	nbImbalance = _ib.nimbalance(inv, tspec)
+	econ = econ(inv, tspec)
+	loc = _ut.normDatas(nbMpairs, tab, size, nfeat)
+	glob = _ut.normDatas(nbImbalance, tab, size, nfeat,nbMpairs)
 	return (econ, loc, glob)
 
 def econ(inv, tspec) : 
@@ -42,7 +40,7 @@ def econ(inv, tspec) :
 	'''
 	size = inv.shape[0]
 	nfeat = len(tspec)
-	return econValue(size, nfeat)
+	return _ev.econValue(size, nfeat)
 
 def econValue(size, nfeat):
 	"""
@@ -72,7 +70,7 @@ def loc (inv, tspec, tab) :
 	size = inv.shape[0]
 	nfeat = len(tspec)
 	nbMpairs = mp.nmpairs(inv, tspec)
-	return (ut.normDatas(tab, size, nfeat))[nbMpairs]
+	return (_ut.normDatas(tab, size, nfeat))[nbMpairs]
 	
 def glob (inv, tspec, tab) : 
 	'''
@@ -90,5 +88,5 @@ def glob (inv, tspec, tab) :
 	size = inv.shape[0]
 	nfeat = len(tspec)
 	nbMpairs = mp.nmpairs(inv, tspec)
-	nbImbalance = ib.nimbalance(inv, tspec)
-	return (ut.normDatas(tab, size, nfeat,nbMpairs))[nbImbalance]
+	nbImbalance = _ib.nimbalance(inv, tspec)
+	return (_ut.normDatas(tab, size, nfeat,nbMpairs))[nbImbalance]
