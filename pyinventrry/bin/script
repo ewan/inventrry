@@ -52,4 +52,8 @@ if __name__ == "__main__":
 	#					help='csv containing features for a single inventory,'
 	#					' with header, coded numerically')
 	args = parser.parse_args(sys.argv[1:])
-
+	dict = calculateScore(	sType,
+				pd.read_csv(parser.inventory),
+				pd.read_csv(parser.specs), 
+				pd.read_feather(parser.normTab) )
+	print(dict)
