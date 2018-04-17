@@ -1,4 +1,4 @@
-,segment_type,inventory_type,language,anterior,labial,back,high,ATR,lateral,distributed,LONG,spread,low,syllabic,continuant,nasal,sonorant,coronal,tense,constr,vocalic,strident,EXTRA,consonantal,voice,round
+index,_segment_type,_inventory_type,_language,anterior,labial,back,high,ATR,lateral,distributed,LONG,spread,low,syllabic,continuant,nasal,sonorant,coronal,tense,constr,vocalic,strident,EXTRA,consonantal,voice,round
 34,Whole,Natural,aar,-,-,-,+,-,-,-,-,-,-,-,+,-,+,-,-,-,-,-,-,-,+,-
 35,Whole,Natural,aar,-,-,-,-,-,-,-,-,-,-,-,-,-,-,+,-,-,-,-,-,+,+,-
 36,Whole,Natural,aar,-,-,-,+,+,-,-,+,-,-,+,+,-,+,-,+,-,+,-,-,-,+,-

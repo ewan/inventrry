@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import numpy as np
+import sys
 import argparse
 import pandas as pd
 import pyinventrry as pi
@@ -24,9 +25,11 @@ def tupleKeys(acc, wholeMeta, metaList):
 	meta = metaList.pop()
 	for t in acc : 
 		for k in wholeMeta[meta] :
-			newAcc.append(list(t).append((meta,k)))
+			l = list(t)
+			l.append((meta,k))
+			newAcc.append(l)
 	if metaList : 
-		return slicy(newAcc, wholeMeta, metaList)
+		return tupleKeys(newAcc, wholeMeta, metaList)
 	else :
 		return newAcc
 
@@ -36,7 +39,7 @@ def calculateScore( invTest, specTest, normTab ) :
 	
 	mainDict = {}
 	for t in unique:
-	
+		
 
 	for lang in language :
 		mainDict[lang]={}
