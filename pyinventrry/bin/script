@@ -8,9 +8,36 @@ import pyinventrry.util as ut
 
 sType = ['Whole', 'Consonant','Stop/affricate', 'Vowel']
 
-def calculateScore( sType, invTest, specTest, normTab ) : 
-	language = set(specTest['language'].values)
+def calculateMetaKeys(dataFrame):
+	all = [ x for x in dataFrame ]
+	meta = set()
+	for k in all :
+		if k=='' or k[0]=='_' :
+			meta.add(k)
+	metaV = {}
+	for k in meta:
+		metaV[k] = set(dataFrame[k].tolist())
+	return meta,metaV
+
+def tupleKeys(acc, wholeMeta, metaList):
+	newAcc = []
+	meta = metaList.pop()
+	for t in acc : 
+		for k in wholeMeta[meta] :
+			newAcc.append(list(t).append((meta,k)))
+	if metaList : 
+		return slicy(newAcc, wholeMeta, metaList)
+	else
+		return newAcc
+
+def calculateScore( invTest, specTest, normTab ) : 
+	metaKeys, wholeMeta = calculateMetaKeys(invTest)
+	unique = tupleKeys([[]] , wholeMeta, list(metaKeys))
+	
 	mainDict = {}
+	for t in unique:
+		
+
 	for lang in language :
 		mainDict[lang]={}
 		for t in sType :
