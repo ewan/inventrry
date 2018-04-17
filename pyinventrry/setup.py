@@ -7,5 +7,5 @@ setup(name='pyinventrry',
 		author='Ewan DUNBAR & Sebastien GADIOUX',
 		author_email='',
 		license='',
-		packages=['pyinventrry'],
+		packages=['pyinventrry','pyinventrry.score'],
 		zip_safe=False)

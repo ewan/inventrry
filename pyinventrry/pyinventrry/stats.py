@@ -1,8 +1,6 @@
 __all__ = ['stat', 'econ', 'loc', 'glob']
 
-from pyinventrry.score import ecovalue as _ev
-import mpairs as _mp
-import pyinventrry.score.imbalance as _ib
+from pyinventrry.score import ecovalue as _ev, mpairs as _mp, imbalance as _ib
 import pyinventrry.util as _ut
 
 def stat (inv, tspec, tab) :
