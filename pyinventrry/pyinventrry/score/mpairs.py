@@ -28,4 +28,4 @@ def nmpairs(inventory, spec):
 		:type inventory: pandas.DataFrame
 		:type spec: list
 	'''
-/bin/bash: q: command not found
+	return sum(mpairs(inventory, spec, feat) for feat in spec)

@@ -1,7 +1,7 @@
 __all__ = ['stat', 'econ', 'loc', 'glob']
 
-import pyinventry.score.ecovalue as _ev
-import pyinventrry.score.mpairs as _mp
+from pyinventrry.score import ecovalue as _ev
+import mpairs as _mp
 import pyinventrry.score.imbalance as _ib
 import pyinventrry.util as _ut
 
