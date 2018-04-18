@@ -11,36 +11,54 @@ sType = ['Whole', 'Consonant','Stop/affricate', 'Vowel']
 
 def calculateMetaKeys(dataFrame):
 	all = [ x for x in dataFrame ]
-	meta = set()
+	meta = []
 	for k in all :
 		if k=='' or k[0]=='_' :
-			meta.add(k)
-	metaV = {}
-	for k in meta:
-		metaV[k] = set(dataFrame[k].tolist())
-	return meta,metaV
+			meta.append(k)
+	return meta
 
-def tupleKeys(acc, wholeMeta, metaList):
+def calculateUnique(dataframe, acc, meta):
 	newAcc = []
-	meta = metaList.pop()
-	for t in acc : 
-		for k in wholeMeta[meta] :
-			l = list(t)
-			l.append((meta,k))
-			newAcc.append(l)
-	if metaList : 
-		return tupleKeys(newAcc, wholeMeta, metaList)
+	mKey = meta.pop()
+	tmp = pd.DataFrame(dataframe)
+	for k in acc :
+		for tk in k :
+			tmp = tmp.loc[tmp[tk[0]]==tk[1]]
+		uni = tmp[mKey].unique()
+		for n in uni :
+			newKey = list(k)
+			newKey.append((mKey,n))
+			newAcc.append(newKey)
+	if meta :
+		return calculateUnique(dataframe, newAcc, meta)
 	else :
 		return newAcc
 
-def calculateScore( invTest, specTest, normTab ) : 
-	metaKeys, wholeMeta = calculateMetaKeys(invTest)
-	unique = tupleKeys([[]] , wholeMeta, list(metaKeys))
-	
-	mainDict = {}
-	for t in unique:
-		
+def extractDataFrame(DataFrame, tuples):
+	ret = pd.DataFrame(DataFrame)
+	for t in tuples :
+		ret = ret.loc[ret[t[0]]==t[1]]
+		ret.drop(t[0],axis=1)
+	return ret
 
+def calculateScore( invTest, specTest, normTab ) : 
+	metaKeys = calculateMetaKeys(invTest)
+	unique = calculateUnique(invTest,[[]], list(metaKeys))
+	'''
+	OK here
+	'''
+	result = pd.DataFrame(columns=metaKeys+['econ','loc','glob'])
+	for t in unique:
+	
+		inv = extractDataFrame(invTest, t)
+		spe = extractDataFrame(specTest, t)
+		leng = spe.shape[0] 
+		for spec in range(leng) : 
+			e, l, g = pi.stats.stat(inv, (ut.getTrueSpecs(spe.iloc[spec].to_dict())),normTab)
+			print(e,l,g)
+		pass
+
+	'''
 	for lang in language :
 		mainDict[lang]={}
 		for t in sType :
@@ -55,7 +73,8 @@ def calculateScore( invTest, specTest, normTab ) :
 				mainDict[lang][t]['Glob'].append(g)
 			for i in mainDict[lang][t] :
 				mainDict[lang][t][i] = np.nanmedian(mainDict[lang][t][i])
-	return mainDict
+	'''
+	return result
 
 def generateDataFrame(dict):
 	ret = pd.DataFrame(columns = ['Language','Type','Econ','Loc','Glob'])

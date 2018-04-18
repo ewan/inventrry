@@ -20,10 +20,10 @@ def stat (inv, tspec, tab) :
 	'''
 	nbMpairs = _mp.nmpairs(inv, tspec)
 	nbImbalance = _ib.nimbalance(inv, tspec)
-	econ = econ(inv, tspec)
-	loc = _ut.normDatas(nbMpairs, tab, size, nfeat)
-	glob = _ut.normDatas(nbImbalance, tab, size, nfeat,nbMpairs)
-	return (econ, loc, glob)
+	eco = econ(inv, tspec)
+	loca = loc(inv, tspec, tab)
+	globa = glob(inv, tspec, tab)
+	return (eco, loca, globa)
 
 def econ(inv, tspec) : 
 	'''
@@ -40,18 +40,6 @@ def econ(inv, tspec) :
 	nfeat = len(tspec)
 	return _ev.econValue(size, nfeat)
 
-def econValue(size, nfeat):
-	"""
-		Calculate the economic score from int values
-		:param size: the size of an inventory
-		:param nfeat: the number of discriminating features 
-		:type size: int
-		:type nfeat: int
-		:return: the score
-		:rtype: double
-	"""
-	return (size - (nfeat+1))/(2**nfeat - (nfeat+1))
-
 def loc (inv, tspec, tab) :  
 	'''
 		Calcutate the local score
@@ -67,8 +55,8 @@ def loc (inv, tspec, tab) :
 	'''
 	size = inv.shape[0]
 	nfeat = len(tspec)
-	nbMpairs = mp.nmpairs(inv, tspec)
-	return (_ut.normDatas(tab, size, nfeat))[nbMpairs]
+	nbMpairs = _mp.nmpairs(inv, tspec)
+	return (_ut.normDatas(nbMpairs,tab, size, nfeat))
 	
 def glob (inv, tspec, tab) : 
 	'''
@@ -85,6 +73,6 @@ def glob (inv, tspec, tab) :
 	'''
 	size = inv.shape[0]
 	nfeat = len(tspec)
-	nbMpairs = mp.nmpairs(inv, tspec)
+	nbMpairs = _mp.nmpairs(inv, tspec)
 	nbImbalance = _ib.nimbalance(inv, tspec)
-	return (_ut.normDatas(tab, size, nfeat,nbMpairs))[nbImbalance]
+	return (_ut.normDatas(nbImbalance,tab, size, nfeat,nbMpairs))

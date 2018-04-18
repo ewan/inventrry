@@ -22,5 +22,6 @@ setup(
 	author_email='',
 	license='',
 	packages=['pyinventrry','pyinventrry.score'],
+	scripts=['bin/script'],
 	zip_safe=False
 )

@@ -21,5 +21,6 @@ def nimbalance( values, spec ) :
 	'''
 	total = 0
 	for i in spec :
-		total += imbalance(_otn(values[i]))
+		x = _otn(values[i])
+		total += imbalance(x)
 	return total
