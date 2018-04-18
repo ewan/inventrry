@@ -25,6 +25,7 @@ def calculateUnique(dataframe, acc, meta):
 		for tk in k :
 			tmp = tmp.loc[tmp[tk[0]]==tk[1]]
 		uni = tmp[mKey].unique()
+		print(uni)
 		for n in uni :
 			newKey = list(k)
 			newKey.append((mKey,n))
@@ -44,9 +45,7 @@ def extractDataFrame(DataFrame, tuples):
 def calculateScore( invTest, specTest, normTab ) : 
 	metaKeys = calculateMetaKeys(invTest)
 	unique = calculateUnique(invTest,[[]], list(metaKeys))
-	'''
-	OK here
-	'''
+	metaKeys.reverse()
 	result = pd.DataFrame(columns=metaKeys+['econ','loc','glob'])
 	for t in unique:
 	
@@ -55,25 +54,12 @@ def calculateScore( invTest, specTest, normTab ) :
 		leng = spe.shape[0] 
 		for spec in range(leng) : 
 			e, l, g = pi.stats.stat(inv, (ut.getTrueSpecs(spe.iloc[spec].to_dict())),normTab)
-			print(e,l,g)
-		pass
+			d = dict(t)
+			d['econ'] = e
+			d['loc'] = l
+			d['glob'] = g
+			result = result.append(d, ignore_index=True)
 
-	'''
-	for lang in language :
-		mainDict[lang]={}
-		for t in sType :
-			mainDict[lang][t] = {'Econ' : [] , 'Loc' : [], 'Glob' : []}
-			inv = invTest.loc[(invTest['segment_type']==t) & (invTest['language']==lang)]
-			spe = specTest.loc[(specTest['segment_type']==t) & (specTest['language']==lang)]
-			leng = spe.shape[0] 
-			for spec in range(leng) : 
-				e, l, g = pi.stats(inv, (ut.getTrueSpecs(spe.iloc[spec].to_dict())),normTab)
-				mainDict[lang][t]['Econ'].append(e)
-				mainDict[lang][t]['Loc'].append(l)
-				mainDict[lang][t]['Glob'].append(g)
-			for i in mainDict[lang][t] :
-				mainDict[lang][t][i] = np.nanmedian(mainDict[lang][t][i])
-	'''
 	return result
 
 def generateDataFrame(dict):
