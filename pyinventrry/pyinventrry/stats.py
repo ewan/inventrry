@@ -18,8 +18,6 @@ def stat (inv, tspec, tab) :
 		:rtype: double tuple
 
 	'''
-	nbMpairs = _mp.nmpairs(inv, tspec)
-	nbImbalance = _ib.nimbalance(inv, tspec)
 	eco = econ(inv, tspec)
 	loca = loc(inv, tspec, tab)
 	globa = glob(inv, tspec, tab)
@@ -38,7 +36,7 @@ def econ(inv, tspec) :
 	'''
 	size = inv.shape[0]
 	nfeat = len(tspec)
-	return _ev.econValue(size, nfeat)
+	return _ev.econ_value(size, nfeat)
 
 def loc (inv, tspec, tab) :  
 	'''
@@ -55,8 +53,8 @@ def loc (inv, tspec, tab) :
 	'''
 	size = inv.shape[0]
 	nfeat = len(tspec)
-	nbMpairs = _mp.nmpairs(inv, tspec)
-	return (_ut.normDatas(nbMpairs,tab, size, nfeat))
+	nb_mpairs = _mp.n_mpairs(inv, tspec)
+	return (_ut.norm_datas(nb_mpairs,tab, size, nfeat))
 	
 def glob (inv, tspec, tab) : 
 	'''
@@ -73,6 +71,6 @@ def glob (inv, tspec, tab) :
 	'''
 	size = inv.shape[0]
 	nfeat = len(tspec)
-	nbMpairs = _mp.nmpairs(inv, tspec)
-	nbImbalance = _ib.nimbalance(inv, tspec)
-	return (_ut.normDatas(nbImbalance,tab, size, nfeat,nbMpairs))
+	nb_mpairs = _mp.n_mpairs(inv, tspec)
+	nb_imbalance = _ib.n_imbalance(inv, tspec)
+	return (_ut.norm_datas(nb_imbalance,tab, size, nfeat,nb_mpairs))

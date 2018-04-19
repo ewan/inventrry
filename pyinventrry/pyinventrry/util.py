@@ -6,7 +6,14 @@ Created on 2015-05-18
 
 import numpy as _np
 
-def sebHash( tab ) : 
+def seb_hash( tab ) : 
+	'''
+	Calculate the hash of a (+/-) array
+	:param tab: the array to hash
+	:type tab: String array
+	:return: the hash value
+	:rtype: int
+	'''
 	l = len(tab)
 	r = 1
 	for i in range(l) :
@@ -15,7 +22,7 @@ def sebHash( tab ) :
 			r+=1
 	return r
 
-def normDatas(value, normTab, size, nfeat, nmpairs = None):
+def norm_datas(value, normTab, size, nfeat, nmpairs = None):
 	'''
 		Normalize a array of values into its [0-1] equivalent. If nmpairs has only one possibility and nimbalance is asked, return None 
 		:param value: the value to normalize 
@@ -47,9 +54,9 @@ def normDatas(value, normTab, size, nfeat, nmpairs = None):
 		return _np.nan
 	return normList.index(value)/(length-1)
 
-def getTrueSpecs(dictio):
+def get_true_specs(dictio):
 	'''
-		Wipe out all entries of a dictionnay which are not exactly True or False 
+		Wipe out all entries of a dictionnay which are not exactly True 
 		:param dictio: the dictionnary to clean
 	'''
 	tmp = []
