@@ -36,7 +36,7 @@ def calculate_unique(data_frame, acc, meta):
 	:return: the list of all unique meta_value in the DataFrame
 	:rtype: tuple array array
 	'''
-	new_acc = [b]
+	new_acc = []
 	m_key = meta.pop()
 	tmp = pd.DataFrame(data_frame)
 	for k in acc :
@@ -48,7 +48,7 @@ def calculate_unique(data_frame, acc, meta):
 			new_key.append((m_key,n))
 			new_acc.append(new_key)
 	if meta :
-		return calculate_unique(dataframe, new_acc, meta)
+		return calculate_unique(data_frame, new_acc, meta)
 	else :
 		return new_acc
 
@@ -65,7 +65,7 @@ def extract_data_frame(data_frame, tuples):
 	ret = pd.DataFrame(data_frame)
 	for t in tuples :
 		ret = ret.loc[ret[t[0]]==t[1]]
-		ret.drop(t[0],axis=1)
+		ret = ret.drop(t[0], axis=1)
 	return ret
 
 def calculate_score( inv_whole, spec_whole, norm_tab ) : 
@@ -81,17 +81,21 @@ def calculate_score( inv_whole, spec_whole, norm_tab ) :
 	:rtype:
 	'''
 	meta_keys = calculate_meta_keys(inv_whole)
+	meta_keys_spec = calculate_meta_keys(spec_whole)
+	delta_keys = list(set(meta_keys_spec) - set(meta_keys))
 	unique = calculate_unique(inv_whole,[[]], list(meta_keys))
-	result = pd.DataFrame(columns=meta_keys+['econ','loc','glob'])
-	print(result)
+	result = pd.DataFrame(columns=meta_keys + delta_keys + ['econ','loc','glob'])
+	print(list(result))
 	for t in unique:
 		inv = extract_data_frame(inv_whole, t)
 		spe = extract_data_frame(spec_whole, t)
-		leng = spe.shape[0] 
-		for spec in range(leng) : 
-			result = pd.DataFrame(columns=meta_keys+['econ','loc','glob'])
-			e, l, g = pi.stats.stat(inv, (ut.get_true_specs(spe.iloc[spec].to_dict())),norm_tab)
-			d = dict(t)
+		spec_keys = calculate_unique(spe, [[]], list(delta_keys))
+		for s_key in spec_keys :
+			 
+			result = pd.DataFrame(columns=meta_keys + delta_keys +['econ','loc','glob'])
+			x = (extract_data_frame(spe,s_key))
+			e, l, g = pi.stats.stat(inv, (ut.get_true_specs(x.iloc[0].to_dict())),norm_tab)
+			d = dict(t+s_key)
 			d['econ'] = e
 			d['loc'] = l
 			d['glob'] = g
@@ -99,11 +103,17 @@ def calculate_score( inv_whole, spec_whole, norm_tab ) :
 			print(result.to_string(header=False))
 	return result
 
+def open_file(argument):
+	if (argument[-3:]=='csv'):
+		return pd.read_csv(argument)
+	else :
+		return pd.read_feather(argument)
+
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser()
-	parser.add_argument("inventory", help = 'A csv file with the correct format for the inventory')
-	parser.add_argument("specs", help = 'A csv file with the correct format for the specs')
-	parser.add_argument("norm_tab", help = 'A file used for normalize data (actually in feather format)')
+	parser.add_argument("inventory", help = 'A file with the correct format for the inventory')
+	parser.add_argument("specs", help = 'A file with the correct format for the specs')
+	parser.add_argument("norm_tab", help = 'A file used for normalize data')
 	#parser.add_argument('--max-cost', type=float,
 	#					default=float("inf"))
 	#parser.add_argument('--seed', type=int, default=None)
@@ -111,9 +121,7 @@ if __name__ == "__main__":
 	#					help='csv containing features for a single inventory,'
 	#					' with header, coded numerically')
 	args = parser.parse_args(sys.argv[1:])
-	print(args)
-	print(sys.argv[1:])
-	dict = calculate_score(	pd.read_csv(args.inventory),
-				pd.read_csv(args.specs), 
-				pd.read_feather(args.norm_tab) )
+	dict = calculate_score(	open_file(args.inventory),
+				open_file(args.specs), 
+				open_file(args.norm_tab) )
 	print("\ndone")
