@@ -98,7 +98,7 @@ def calculate_score( inv_whole, spec_whole, norm_tab, write_file ) :
 			d['loc'] = l
 			d['glob'] = g
 			result = result.append(d, ignore_index=True)
-			result.to_csv(write_file,header=False,index=False)
+			result.to_csv(write_file, mode = 'a', header=False, index=False)
 
 def open_file(argument):
 	'''
