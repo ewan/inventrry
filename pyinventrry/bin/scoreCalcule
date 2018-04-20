@@ -7,8 +7,6 @@ import pandas as pd
 import pyinventrry as pi
 import pyinventrry.util as ut
 
-sType = ['Whole', 'Consonant','Stop/affricate', 'Vowel']
-
 def calculate_meta_keys(data_frame):
 	'''
 	Find all colummns name which start with an underscore
@@ -68,24 +66,24 @@ def extract_data_frame(data_frame, tuples):
 		ret = ret.drop(t[0], axis=1)
 	return ret
 
-def calculate_score( inv_whole, spec_whole, norm_tab ) : 
+def calculate_score( inv_whole, spec_whole, norm_tab, write_file ) : 
 	'''
-	Calculate and print economic, local and global scores 
+	Calculate and print economic, local and global scores and write it in the 
 	:param inv_whole:
 	:param spec_whole:
 	:param norm_tab:
+	:param write_file:
 	:type inv_whole:
 	:type spec_whole:
 	:type norm_tab:
-	:return:
-	:rtype:
+	:type write_file:
 	'''
 	meta_keys = calculate_meta_keys(inv_whole)
 	meta_keys_spec = calculate_meta_keys(spec_whole)
 	delta_keys = list(set(meta_keys_spec) - set(meta_keys))
 	unique = calculate_unique(inv_whole,[[]], list(meta_keys))
 	result_global = pd.DataFrame(columns=meta_keys + delta_keys + ['econ','loc','glob'])
-	print(list(result_global))
+	result_global.to_csv(write_file,index=False)
 	for t in unique:
 		inv = extract_data_frame(inv_whole, t)
 		spe = extract_data_frame(spec_whole, t)
@@ -100,11 +98,16 @@ def calculate_score( inv_whole, spec_whole, norm_tab ) :
 			d['loc'] = l
 			d['glob'] = g
 			result = result.append(d, ignore_index=True)
-			print(result.to_string(header=False))
-			result_global = result_global.append(result)
-	return result_global
+			result.to_csv(write_file,header=False,index=False)
 
 def open_file(argument):
+	'''
+	Check file type and open it correctly
+	:param argument: The path to the file
+	:type argument: string
+	:return: the corresponding DataFrame
+	:rtype: DataFrame
+	'''
 	if (argument[-3:]=='csv'):
 		return pd.read_csv(argument)
 	else :
@@ -115,16 +118,9 @@ if __name__ == "__main__":
 	parser.add_argument("inventory", help = 'A file with the correct format for the inventory')
 	parser.add_argument("specs", help = 'A file with the correct format for the specs')
 	parser.add_argument("norm_tab", help = 'A file used for normalize data')
-	#parser.add_argument('--max-cost', type=float,
-	#					default=float("inf"))
-	#parser.add_argument('--seed', type=int, default=None)
-	#parser.add_argument('inventory_fn',
-	#					help='csv containing features for a single inventory,'
-	#					' with header, coded numerically')
+	parser.add_argument("-w", "--write", default=sys.stdout,)
 	args = parser.parse_args(sys.argv[1:])
-	dictio = calculate_score(	open_file(args.inventory),
-					open_file(args.specs), 
-					open_file(args.norm_tab) )
-	#dictio.to_csv("TestFile", index=False)
-	print("\ndone"))
-	
+	calculate_score(	open_file(args.inventory),
+			open_file(args.specs), 
+			open_file(args.norm_tab),
+			args.write)
