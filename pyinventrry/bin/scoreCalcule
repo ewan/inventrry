@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 import numpy as np
 import sys
@@ -79,7 +79,13 @@ def calculate_score( inv_whole, spec_whole, norm_tab, write_file ) :
 	:type write_file:
 	'''
 	meta_keys = calculate_meta_keys(inv_whole)
+	if not meta_keys :
+		print('There is an error in the inventory file as no meta information was detected.',file=sys.stderr)
+		return 
 	meta_keys_spec = calculate_meta_keys(spec_whole)
+	if not meta_keys_spec :
+		print('There is an error in the specialization file as no meta information was detected',file=sys.stderr)
+		return
 	delta_keys = list(set(meta_keys_spec) - set(meta_keys))
 	unique = calculate_unique(inv_whole,[[]], list(meta_keys))
 	result_global = pd.DataFrame(columns=meta_keys + delta_keys + ['econ','loc','glob'])
