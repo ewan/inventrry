@@ -22,6 +22,6 @@ setup(
 	author_email='',
 	license='',
 	packages=['pyinventrry','pyinventrry.score'],
-	scripts=['bin/scoreCalcule'],
+	entry_points={'console_scripts' : ['scoreCalcule=pyinventrry.scoreCalcule:main']},
 	zip_safe=False
 )
