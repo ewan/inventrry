@@ -3,10 +3,11 @@ package:
   version: "0.1"
 
 source:
-  path: . 
+  path: ../. 
 
 build:
-
+  entry_points:
+    - scoreCalcule=pyinventrry.scoreCalcule:main
 requirements:
   run:
     - python >=3

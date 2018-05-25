@@ -117,7 +117,7 @@ def open_file(argument):
 	else :
 		return pd.read_feather(argument)
 
-if __name__ == "__main__":
+def main():
 	parser = argparse.ArgumentParser()
 	parser.add_argument("inventory", help = 'A file with the correct format for the inventory')
 	parser.add_argument("specs", help = 'A file with the correct format for the specs')
@@ -128,3 +128,6 @@ if __name__ == "__main__":
 			open_file(args.specs), 
 			open_file(args.norm_tab),
 			args.write)
+
+if __name__ == "__main__":
+	main()
