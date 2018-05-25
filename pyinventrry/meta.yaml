@@ -5,6 +5,10 @@ package:
 source:
   path: . 
 
+build:
+  entry_point:
+    scoreCalcule = scoreCalcule
+
 requirements:
   run:
     - python
