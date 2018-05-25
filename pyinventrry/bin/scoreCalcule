@@ -68,7 +68,7 @@ def extract_data_frame(data_frame, tuples):
 
 def calculate_score( inv_whole, spec_whole, norm_tab, write_file ) : 
 	'''
-	Calculate and print economic, local and global scores and write it in the 
+	Calculate and print economic, local and global scores.
 	:param inv_whole:
 	:param spec_whole:
 	:param norm_tab:
@@ -84,7 +84,7 @@ def calculate_score( inv_whole, spec_whole, norm_tab, write_file ) :
 		return 
 	meta_keys_spec = calculate_meta_keys(spec_whole)
 	if not meta_keys_spec :
-		print('There is an error in the specialization file as no meta information was detected',file=sys.stderr)
+		print('There is an error in the specification file as no meta information was detected',file=sys.stderr)
 		return
 	delta_keys = list(set(meta_keys_spec) - set(meta_keys))
 	unique = calculate_unique(inv_whole,[[]], list(meta_keys))

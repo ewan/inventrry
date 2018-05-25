@@ -1,27 +1,19 @@
 package:
-	name: pyinventrry 
-	version: "0.1"
+  name: pyinventrry 
+  version: "0.1"
 
 source:
-	git_rev: 
-	git_url: https://github.com/ewan/inventrry
+  path: . 
 
 requirements:
-	host:
-		- python
-		- setuptools
-
-
-	run:
-		- python
-		- numpy
-		- pandas >= 0.20
+  run:
+    - python
+    - numpy
+    - pandas >=0.20
 
 test:
-	imports:
-		- pyinventrry
 
 about:
-	home:
-	license:
-	license_file:
+  home:
+  license:
+  license_file:
