@@ -357,7 +357,7 @@ class MinimalSetIterator(object):
     def __iter__(self):
       return self
     
-    def next(self):
+    def __next__(self):
         """
         Return the next minimal set of features. Stop if no more can
         be found.
@@ -422,7 +422,7 @@ if __name__ == "__main__":
     nfeat = len(inventory.dtype)
     feature_names = inventory.dtype.names
     inventory.dtype = None
-    nsegs = len(inventory)/nfeat
+    nsegs = len(inventory)//nfeat
     inventory.shape = (nsegs,23)
     specs_ = specs(inventory, args.max_cost, args.seed)
     row = ""
