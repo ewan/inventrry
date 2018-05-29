@@ -33,11 +33,11 @@ def calculate_score( inv_whole, spec_whole, norm_tab, write_file ) :
 	for t in unique:
 		inv = dm.extract_data_frame(inv_whole, t)
 		spe = dm.extract_data_frame(spec_whole, t)
-		spec_keys = sm.calculate_unique(spe, [[]], list(delta_keys))
+		spec_keys = dm.calculate_unique(spe, [[]], list(delta_keys))
 		for s_key in spec_keys :
-			 
 			result = pd.DataFrame(columns=meta_keys + delta_keys +['econ','loc','glob'])
 			x = (dm.extract_data_frame(spe,s_key))
+
 			e, l, g = pi.stats.stat(inv, (ut.get_true_specs(x.iloc[0].to_dict())),norm_tab)
 			d = dict(t+s_key)
 			d['econ'] = e
