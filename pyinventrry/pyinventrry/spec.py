@@ -4,16 +4,15 @@ import argparse
 import pyinventrry.data_manager as _dm
 import pyinventrry.prioList as _pl
 
-def split_by(i, part, global_part):
+def split_by(feat, part, global_part):
 
 	plus = []
 	minus = []
 	none = []
-				
 	for phon in part :
-		if phon[i] == '+' or phon[i] == '1' or phon[i] == 1 or phon[i] == 'True' :
+		if phon[feat] == '+' or phon[feat] == '1' or phon[feat] == 1 or phon[feat] == 'True' :
 			plus.append(phon)
-		elif phon[i] == '-' or phon[i] == '0' or phon[i] == 0 or phon[i] == 'False':
+		elif phon[feat] == '-' or phon[feat] == '0' or phon[feat] == 0 or phon[feat] == 'False':
 			minus.append(phon)
 		else :
 			none.append(phon)
@@ -31,60 +30,89 @@ def split_by(i, part, global_part):
 			global_part.append(none)
 		return True
 
-def usefull_specs(feat_dict,phones) :
+def compare(s, t):
+    t = list(t)   # make a mutable copy
+    try:
+        for elem in s:
+            t.remove(elem)
+    except (ValueError, TypeError) as e:
+        return False
+    return not t
 
-	parts = {}
-	for i in feat_dict :
-		gp = []
-		split_by(i,phones,gp)
-		parts[i]=gp
-	pl = _pl.PrioList()
-	for i in feat_dict : 
-		if len(parts[i]) > 1 :
-			x = abs(len(parts[i][0]) - len(parts[i][1]) )
-			pl.put((x,i))
-		else :
-			pl.put((len(feat_dict),i))
+class Node:
 
-	usefull = []
-	while not pl.empty():
-		usefull.append(pl.pop())
+	def __init__(self,p, s, o, pa, n = {}, e = False): 
+		self.parent = p
+		self.splitter = s
+		self.other = o
+		self.parts = pa
+		self.next = n
+		self.end = e
 
-	return usefull
+	def better(self, parts, feat):
+		if self.parent is None :
+			return False
+		return compare(self.parent.next[feat].parts, parts)
 
-def calculate_spec(phones, feat_dict):
+	def generate(self):
+		if self.end:
+			return 
 
-	partitionner = { () : [phones] }
-	returN = []
-
-	good_specs = usefull_specs(feat_dict,phones)
-
-	for i in good_specs :
 		to_add = {}
-		for c in partitionner :
-			global_part = []
+		to_end = set()
+		for i in self.other :
+			g = []
 			split = False
-			for part in partitionner[c]:
-				if split_by(i, part, global_part):
+			for p in self.parts :
+				if split_by(i, p, g):
 					split = True
-
 			if split :
-				tmp = list(c)
-				tmp.append(i)
-				tmp = tuple(tmp)
-				w_part = partitionner[c]
-
-				if global_part :
-					to_add[tmp]=global_part
-					pass
-
+				if self.better(g,i):
+					to_end.add(i)
 				else :
-					returN.append(tmp)
+					if g :
+						to_add[i] = g
+					else :
+						self.next[i] = Node( p = self, s = i, o = {}, pa = [], n = {},  e = True)
+						self.parent.next[i].other.remove(self.splitter)
+		
+		for i in to_end :
+			self.other.remove(i)
 
-		for add in to_add :
-			partitionner[add]=to_add[add]
+		for i in to_add :
+			other_feats = set(self.other)
+			other_feats.remove(i)
+			self.next[i] = Node( p = self, s = i, o = other_feats, pa = to_add[i], n = {})
 
-	return returN
+		for n in self.next :
+			self.next[n].generate()
+
+	def get_specs(self, acc) :
+		if self.splitter == None :
+			for n in self.next :
+				sps = n.get_specs([])
+				for s in sps :
+					acc.append(s)
+			return acc
+		else :
+			acc.append(self.splitter)
+			if self.end :
+				return [acc]
+				pass
+			else :
+				returN = []
+				for n in self.next:
+					sps = n.get_specs( list(acc) )
+					for s in sps :
+						returN.append(s)
+
+			return returN
+
+def tree_theory(phones, feat_set):
+	top = Node(None,None, set(feat_set), phones)
+	top.generate()
+	specs = top.get_specs([])
+
 
 def extract_from_file(file_name):
 	df = _pd.read_csv(file_name)
@@ -115,10 +143,11 @@ def extract_phones(data_frame, feat_dict):
 def calculate_all_specs(file_name):
 	inventories, meta_keys, unique_list, feat_list = extract_from_file(file_name)
 	feat_dict = calculate_feat_dict(feat_list)
+	feat_set = set(feat_dict)
 	df = _pd.DataFrame(columns=meta_keys + ['_spec_nb'] + feat_list)
 	for unique in unique_list :
 		phones = extract_phones(_dm.extract_data_frame(inventories, unique), feat_dict )
-		specs = calculate_spec(phones, feat_dict)
+		specs = tree_theory([phones], feat_set)
 		i = 1
 		for spec in specs :
 			d = dict(unique)
