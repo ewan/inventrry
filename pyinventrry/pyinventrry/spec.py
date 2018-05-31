@@ -2,7 +2,6 @@ import pandas as _pd
 import sys as  _sys
 import argparse
 import pyinventrry.data_manager as _dm
-import pyinventrry.prioList as _pl
 
 def split_by(feat, part, global_part):
 
@@ -31,17 +30,31 @@ def split_by(feat, part, global_part):
 		return True
 
 def compare(s, t):
-    t = list(t)   # make a mutable copy
-    try:
-        for elem in s:
-            t.remove(elem)
-    except (ValueError, TypeError) as e:
-        return False
-    return not t
+	# Is s better than t 
+	b = False
+	sPart = []
+	for p in s :
+		sPart.append(len(p))
+	print(sPart)
+	tPart = []
+	for p in t :
+		tPart.append(len(p))
+	print(tPart)
+	print('--------')
+	t = list(t) 
+	try:
+		for elem in s:
+			t.remove(elem)
+	except (ValueError, TypeError) as e:
+		b =  False
+	if not b :
+		return False
+	b = not t
+	return b
 
 class Node:
 
-	def __init__(self,p, s, o, pa, n = {}, e = False): 
+	def __init__(self,p, s, o, pa, n, e = False): 
 		self.parent = p
 		self.splitter = s
 		self.other = o
@@ -67,6 +80,9 @@ class Node:
 				if split_by(i, p, g):
 					split = True
 			if split :
+				if self.parent is not None :
+					if self.splitter in self.parent.next[i].other :
+						self.parent.next[i].other.remove(self.splitter)
 				if self.better(g,i):
 					to_end.add(i)
 				else :
@@ -74,7 +90,6 @@ class Node:
 						to_add[i] = g
 					else :
 						self.next[i] = Node( p = self, s = i, o = {}, pa = [], n = {},  e = True)
-						self.parent.next[i].other.remove(self.splitter)
 		
 		for i in to_end :
 			self.other.remove(i)
@@ -87,32 +102,49 @@ class Node:
 		for n in self.next :
 			self.next[n].generate()
 
-	def get_specs(self, acc) :
+	def get_specs(self, acc, actual) :
 		if self.splitter == None :
 			for n in self.next :
-				sps = n.get_specs([])
-				for s in sps :
-					acc.append(s)
+				self.next[n].get_specs(acc, [])
 			return acc
 		else :
-			acc.append(self.splitter)
+			actual.append(self.splitter)
 			if self.end :
-				return [acc]
-				pass
+				acc.append(actual)
 			else :
-				returN = []
 				for n in self.next:
-					sps = n.get_specs( list(acc) )
-					for s in sps :
-						returN.append(s)
-
-			return returN
+					self.next[n].get_specs( acc, list(actual))
+			return 
 
 def tree_theory(phones, feat_set):
-	top = Node(None,None, set(feat_set), phones)
+	top = Node(p = None, s = None, o = set(feat_set), pa = phones, n = {})
 	top.generate()
-	specs = top.get_specs([])
+	return top.get_specs(acc = [], actual = [])
 
+def data_frame_theory(feat_set, phones, deep):
+	specs = []
+	for f in feat_set :
+		done = True
+		tmp = set(feat_set)
+		tmp.remove(f)
+		rmv = phones.loc[:,tmp].drop_duplicates()
+		if rmv.shape[0] == 2:
+
+			specs.append([f])
+
+		if rmv.shape[0] != phones.shape[0]:
+			done = False
+			part = data_frame_theory(tmp, rmv, deep +1 )
+			for s in part:
+				s.append(f)
+				specs.append(s)
+		if (pow(2, deep)>= rmv.shape[0]):
+			specs.append([f])
+	return specs
+
+
+
+	input('Be ready for ^C')
 
 def extract_from_file(file_name):
 	df = _pd.read_csv(file_name)
@@ -147,7 +179,8 @@ def calculate_all_specs(file_name):
 	df = _pd.DataFrame(columns=meta_keys + ['_spec_nb'] + feat_list)
 	for unique in unique_list :
 		phones = extract_phones(_dm.extract_data_frame(inventories, unique), feat_dict )
-		specs = tree_theory([phones], feat_set)
+		phones = _dm.extract_data_frame(inventories, unique)
+		specs = data_frame_theory(feat_list, phones, 0)
 		i = 1
 		for spec in specs :
 			d = dict(unique)
@@ -156,7 +189,7 @@ def calculate_all_specs(file_name):
 			for feat in feat_list:
 				d[feat] = 'False'
 			for t in spec:
-				d[feat_dict[t]] = 'True'
+				d[t] = 'True'
 			df = df.append(d, ignore_index=True)
 	
 	return df
