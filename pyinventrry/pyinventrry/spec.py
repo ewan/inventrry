@@ -155,7 +155,7 @@ def calculate_all_specs(file_name):
 	feat_set = set(feat_dict)
 	df = _pd.DataFrame(columns=meta_keys + ['_spec_nb'] + feat_list)
 	for unique in unique_list :
-		df_phones = phones = _dm.extract_data_frame(inventories, unique)
+		df_phones = _dm.extract_data_frame(inventories, unique)
 		
 		phones = extract_phones(df_phones, feat_dict )
 		int_specs = tree_theory(feat_set, [phones])
