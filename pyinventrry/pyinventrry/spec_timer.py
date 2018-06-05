@@ -60,9 +60,9 @@ def time_specs(file_name) :
 			d['_spec_nb'] = 'Spec'+str(i)
 			i+=1
 			for feat in feat_list:
-				d[feat] = 'False'
+				d[feat] = False
 			for t in spec:
-				d[t] = 'True'
+				d[t] = True
 			df = df.append(d, ignore_index=True)
 
 
@@ -77,9 +77,10 @@ def time_specs(file_name) :
 def compare(theory, real):
 	t = (theory.drop('_spec_id', axis = 1).to_dict('records'))
 	r = (real.drop('_spec_nb', axis = 1).to_dict('records'))
-	print(real)
 	d_t = [x for x in r if x not in t]
-	print(d_t)
+	print(len(d_t),'more specs have been calculated')
+	d_r = [x for x in t if x not in r]
+	print(len(d_r),'more specs have been missed')
 
 def main() :
 	parser = argparse.ArgumentParser()
