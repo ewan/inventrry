@@ -8,6 +8,7 @@ source:
 build:
   entry_points:
     - scoreCalcule=pyinventrry.scoreCalcule:main
+    - specsCalcule=pyinventrry.spec:main
 requirements:
   run:
     - python >=3

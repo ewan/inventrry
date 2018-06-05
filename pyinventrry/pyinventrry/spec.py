@@ -8,9 +8,9 @@ def splitter(feat, part):
 	minus = []
 	none = []
 	for phon in part :
-		if phon[feat] == '+' or phon[feat] == '1' or phon[feat] == 1 or phon[feat] == 'True' :
+		if phon[feat] in {'+','1',1,'True'}:
 			plus.append(phon)
-		elif phon[feat] == '-' or phon[feat] == '0' or phon[feat] == 0 or phon[feat] == 'False':
+		elif phon[feat] in {'-','0',1,'False'}:
 			minus.append(phon)
 		else :
 			none.append(phon)
@@ -18,13 +18,12 @@ def splitter(feat, part):
 	return plus, minus, none	
 
 def split_by(feat, part, global_part):
-
 	plus, minus, none = splitter(feat, part)
-				
-	if ((len(part) == len(plus)) or (len(part) == len(minus)) or (len(part) == len(none))):
+	full = len(part)	
+	if ((full == len(plus)) or (full == len(minus)) or (full == len(none))):
 		global_part.append(part)
 		return False
-				
+
 	else :
 		if len(plus)>1 :
 			global_part.append(plus)
@@ -35,14 +34,13 @@ def split_by(feat, part, global_part):
 		return True
 
 def compare(s, t):
-	# Is s better than t 
-	
-	t = list(t)   # make a mutable copy
+	t = list(t)
 	try:
 		for elem in s:
 			t.remove(elem)
 	except (ValueError, TypeError) as e:
 		return False
+
 	return not t
 
 class Node:
@@ -58,6 +56,7 @@ class Node:
 	def better(self, parts, feat):
 		if self.parent is None :
 			return False
+			
 		return compare(self.parent.next[feat].parts, parts)
 
 	def generate(self):

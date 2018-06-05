@@ -33,13 +33,14 @@ def calculate_one (feat_set, phones, feat_dict, df_phones):
 			specs.append(spec)
 	return specs
 
-def time_specs(file_name) :	
+def time_specs(file_name, write_time, write_specs) :	
 	inventories, meta_keys, unique_list, feat_list = _sp.extract_from_file(file_name)
 	feat_dict = _sp.calculate_feat_dict(feat_list)
 	feat_set = set(feat_dict)
 	time_dict = {}
 	df = _pd.DataFrame(columns=meta_keys + ['_spec_nb'] + feat_list)
-
+	df.to_csv(write_specs, mode = 'w', header=True, index=False)
+	
 	for unique in unique_list :
 		df_phones = _dm.extract_data_frame(inventories, unique)
 		phones = _sp.extract_phones(df_phones, feat_dict )
@@ -64,6 +65,7 @@ def time_specs(file_name) :
 			for t in spec:
 				d[t] = True
 			df = df.append(d, ignore_index=True)
+		df.iloc[df.shape[0]-len(specs):df.shape[0]].to_csv(write_specs, mode = 'a', header=False, index=False)
 
 
 	time_frame = _pd.DataFrame(columns=['Size','Median','Variance'])
@@ -86,12 +88,14 @@ def main() :
 	parser = argparse.ArgumentParser()
 	parser.add_argument("inventory", help = 'A file with the correct format for the inventory')
 	parser.add_argument("theory", help = 'A file with the correct format for the inventory')
-	parser.add_argument("-w", "--write", default=_sys.stdout)
+	parser.add_argument("-t", "--time_data", default=_sys.stdout)
+	parser.add_argument("-s", "--specs_data", default=_sys.stdout)
 	args = parser.parse_args(_sys.argv[1:])
 	file_name = args.inventory
-	write_file = args.write
-	df, spec_frame = time_specs(file_name)
-	df.to_csv(write_file, mode = 'w', header=True, index=False)
+	write_time = args.time_data
+	write_specs = args.specs_data
+	df, spec_frame = time_specs(file_name, write_time, write_specs)
+	df.to_csv(write_time, mode = 'w', header=True, index=False)
 	theory_frame = _dm.open_file(args.theory)
 	compare(theory_frame, spec_frame)
 	

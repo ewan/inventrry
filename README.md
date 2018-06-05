@@ -17,3 +17,15 @@ It is then **absolutely essential** that, **before loading** PythonInR, you set 
     Sys.setenv(PYTHONHOME="/Users/emd/anaconda")
 
 Otherwise, R will crash.
+
+
+###Data Format
+
+Files must be in csv or feather format.
+Meta-datas columns name must start with an underscore, positive binary value must be in {'+','1',1,'True'}, negative binary value must be in {'-','0',0,'False'}, any other value will be considered as None.
+
+###Usage
+
+- scoreCalcule inventory_file specification_file geoms_file [-w destination_file] : will calculate and write in destination file ( or standart output ) geometrics scores results.
+
+- specsCalcule inventory_file [-w destination_file] : will calculates all specifications.
