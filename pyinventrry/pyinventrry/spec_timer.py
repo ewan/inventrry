@@ -8,12 +8,12 @@ import pandas as _pd
 
 _ti.template = """
 def inner(_it, _timer{init}):
-    {setup}
-    _t0 = _timer()
-    for _i in _it:
-        retval = {stmt}
-    _t1 = _timer()
-    return _t1 - _t0, retval
+	{setup}
+	_t0 = _timer()
+	for _i in _it:
+		retval = {stmt}
+	_t1 = _timer()
+	return _t1 - _t0, retval
 """
 
 def wrapper(func, *args, **kwargs):
@@ -41,6 +41,9 @@ def time_specs(file_name, write_time, write_specs) :
 	df = _pd.DataFrame(columns=meta_keys + ['_spec_nb'] + feat_list)
 	df.to_csv(write_specs, mode = 'w', header=True, index=False)
 	
+	time_frame = _pd.DataFrame(columns=['Size','Time'])
+	time_frame.to_csv(write_time, mode = 'w', header=True, index=False)
+	
 	for unique in unique_list :
 		df_phones = _dm.extract_data_frame(inventories, unique)
 		phones = _sp.extract_phones(df_phones, feat_dict )
@@ -49,7 +52,10 @@ def time_specs(file_name, write_time, write_specs) :
 		size = len(phones)
 		
 		time, specs = _ti.timeit(wrapped,setup ="gc.enable"  ,number =1)
-		
+		d = {'Size':size, 'Time' : time}
+		time_frame = time_frame.append(d, ignore_index=True)
+		time_frame.to_csv(write_time, mode = 'a', header=False, index=False)
+	
 		if size in time_dict :
 			time_dict[size].append(time)
 		else :
@@ -88,14 +94,14 @@ def main() :
 	parser = argparse.ArgumentParser()
 	parser.add_argument("inventory", help = 'A file with the correct format for the inventory')
 	parser.add_argument("theory", help = 'A file with the correct format for the inventory')
-	parser.add_argument("-t", "--time_data", default=_sys.stdout)
-	parser.add_argument("-s", "--specs_data", default=_sys.stdout)
+	parser.add_argument("-t", "--time_file", default=_sys.stdout)
+	parser.add_argument("-s", "--specs_file", default=_sys.stdout)
 	args = parser.parse_args(_sys.argv[1:])
 	file_name = args.inventory
-	write_time = args.time_data
-	write_specs = args.specs_data
-	df, spec_frame = time_specs(file_name, write_time, write_specs)
-	df.to_csv(write_time, mode = 'w', header=True, index=False)
+	write_time = args.time_file
+	write_specs = args.specs_file
+	time_frame, spec_frame = time_specs(file_name, write_time, write_specs)
+	time_frame.to_csv(write_time, mode = 'w', header=True, index=False)
 	theory_frame = _dm.open_file(args.theory)
 	compare(theory_frame, spec_frame)
 	

@@ -15,7 +15,7 @@ def splitter(feat, part):
 		else :
 			none.append(phon)
 
-	return plus, minus, none	
+	return plus, minus, none
 
 def split_by(feat, part, global_part):
 	plus, minus, none = splitter(feat, part)

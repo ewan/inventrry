@@ -41,14 +41,14 @@ class PrioList :
 	'''
 	The manager class of the heap
 	'''
-	def __init__(self, heap = SebHeap(None, [])):
+	def __init__(self, heap = None):
 		self.heap = heap #The top heap
 
 	def empty(self):
 		'''
 		Return true if the heap is empty
 		'''
-		return (self.heap is None or self.heap.head is None)
+		return (self.heap is None)
 	
 	def put(self, tuple):
 		'''
