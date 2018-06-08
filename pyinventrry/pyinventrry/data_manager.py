@@ -57,8 +57,9 @@ def calculate_unique(data_frame, acc, meta):
 	'''
 	new_acc = []
 	m_key = meta.pop()
-	tmp = pd.DataFrame(data_frame)
 	for k in acc :
+		print(len(acc), m_key)
+		tmp = pd.DataFrame(data_frame)
 		for tk in k :
 			tmp = tmp.loc[tmp[tk[0]]==tk[1]]
 		uni = tmp[m_key].unique()

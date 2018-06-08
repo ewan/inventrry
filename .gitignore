@@ -4,3 +4,6 @@
 inventrry.Rproj
 python_old
 *.pyc
+tmp.py
+inv.feather
+spec.feather
