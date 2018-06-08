@@ -22,6 +22,6 @@ setup(
 	author_email='',
 	license='',
 	packages=['pyinventrry','pyinventrry.score'],
-	entry_points={'console_scripts' : ['scoreCalcule=pyinventrry.scoreCalcule:main', 'specsCalcule=pyinventrry.spec:main']},
+	entry_points={'console_scripts' : ['scoreCalcule=pyinventrry.scoreCalcule:main', 'specsCalcule=pyinventrry.spec:main', 'timeSpecsCalcule=pyinventrry.spec_timer:main']},
 	zip_safe=False
 )

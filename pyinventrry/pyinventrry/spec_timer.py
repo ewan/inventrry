@@ -1,5 +1,5 @@
-import spec as _sp
-import data_manager as _dm
+import pyinventrry.spec as _sp
+import pyinventrry.data_manager as _dm
 import numpy as _np
 import timeit as _ti
 import sys as  _sys

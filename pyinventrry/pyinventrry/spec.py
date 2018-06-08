@@ -114,7 +114,7 @@ def tree_theory(feat_set, phones):
 	return top.get_specs(acc = [], actual = [])
 
 def extract_from_file(file_name):
-	df = _pd.read_csv(file_name)
+	df = _dm.open_file(file_name)
 	meta_keys = _dm.calculate_meta_keys(df)
 	if not meta_keys :
 		print('There is an error in the inventory file as no meta information was detected.',file=_sys.stderr)
