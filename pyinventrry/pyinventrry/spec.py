@@ -144,15 +144,19 @@ def check_spec(spec, phones):
 	for feat in spec:
 		s = set(spec)
 		s.remove(feat)
-		b = b and phones.loc[:,s].drop_duplicates().shape[0] != phones.loc[:,spec].drop_duplicates().shape[0]
+		if len(s) == 0 :
+			pass
+		else : 
+			b = b and phones.loc[:,s].drop_duplicates().shape[0] != phones.loc[:,spec].drop_duplicates().shape[0]
 
 	return b
 
-def calculate_all_specs(file_name):
+def calculate_all_specs(file_name,write_specs):
 	inventories, meta_keys, unique_list, feat_list = extract_from_file(file_name)
 	feat_dict = calculate_feat_dict(feat_list)
 	feat_set = set(feat_dict)
 	df = _pd.DataFrame(columns=meta_keys + ['_spec_nb'] + feat_list)
+	df.to_csv(write_specs, mode = 'w', header=True, index=False)
 	for unique in unique_list :
 		df_phones = _dm.extract_data_frame(inventories, unique)
 		
@@ -177,6 +181,7 @@ def calculate_all_specs(file_name):
 			for t in spec:
 				d[t] = 'True'
 			df = df.append(d, ignore_index=True)
+		df.iloc[df.shape[0]-len(specs):df.shape[0]].to_csv(write_specs, mode = 'a', header=False, index=False)
 	return df
 
 def main() :
@@ -186,7 +191,7 @@ def main() :
 	args = parser.parse_args(_sys.argv[1:])
 	file_name = args.inventory
 	write_file = args.write
-	df = calculate_all_specs(file_name)
+	df = calculate_all_specs(file_name, write_file)
 	df.to_csv(write_file, mode = 'w', header=True, index=False)
 
 if __name__ == "__main__":

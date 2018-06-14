@@ -43,7 +43,6 @@ def time_specs(file_name, write_time, write_specs) :
 	
 	time_frame = _pd.DataFrame(columns=['Size','Time'])
 	time_frame.to_csv(write_time, mode = 'w', header=True, index=False)
-	print(unique_list)
 	for unique in unique_list :
 		df_phones = _dm.extract_data_frame(inventories, unique)
 		phones = _sp.extract_phones(df_phones, feat_dict )
@@ -55,7 +54,7 @@ def time_specs(file_name, write_time, write_specs) :
 		d = {'Size':size, 'Time' : time}
 		time_frame = time_frame.append(d, ignore_index=True)
 		time_frame.iloc[time_frame.shape[0]-1].to_csv(write_time, mode = 'a', header=False, index=False)
-	
+
 		if size in time_dict :
 			time_dict[size].append(time)
 		else :

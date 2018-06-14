@@ -8,4 +8,6 @@ def econ_value(size, nfeat):
 	:return: the score
 	:rtype: double
 	"""
+	if nfeat<2 :
+		return size//2
 	return (size - (nfeat+1))/(2**nfeat - (nfeat+1))
