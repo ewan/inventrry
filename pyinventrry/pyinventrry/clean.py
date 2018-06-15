@@ -5,6 +5,15 @@ import data_manager as _dm
 
 
 def clean_data_frame(dataframe):
+	"""
+	Remove all 0 into a dataframes, turning them into -, by default,
+	or + if - is not enough to discrimine features.
+	:param dataframe: The dataframe to clean.
+	:param dataframe: DataFrame
+	:return : The dataframe cleaned.
+	:rtype: DataFrame
+
+	"""
 	duplicates = set(dataframe.replace('0','-').drop_duplicates().index)
 	print(duplicates)
 	bad_ones = set(dataframe.index) - duplicates

@@ -21,14 +21,17 @@ def calculate_score( inv_whole, spec_whole, norm_tab, write_file ) :
 	if not meta_keys :
 		print('There is an error in the inventory file as no meta information was detected.',file=sys.stderr)
 		return 
+	
 	meta_keys_spec = _dm.calculate_meta_keys(spec_whole)
 	if not meta_keys_spec :
 		print('There is an error in the specification file as no meta information was detected',file=sys.stderr)
 		return
+	
 	delta_keys = list(set(meta_keys_spec) - set(meta_keys))
 	unique = _dm.calculate_unique(inv_whole,[[]], list(meta_keys))
 	result_global = _pd.DataFrame(columns=meta_keys + delta_keys + ['econ','loc','glob'])
 	result_global.to_csv(write_file,index=False)
+	
 	for t in unique:
 		inv = _dm.extract_data_frame(inv_whole, t)
 		spe = _dm.extract_data_frame(spec_whole, t)
@@ -47,11 +50,18 @@ def calculate_score( inv_whole, spec_whole, norm_tab, write_file ) :
 
 def main():
 	parser = argparse.ArgumentParser()
-	parser.add_argument("inventory", help = 'A file with the correct format for the inventory')
-	parser.add_argument("specs", help = 'A file with the correct format for the specs')
-	parser.add_argument("norm_tab", help = 'A file used for normalize data')
-	parser.add_argument("-w", "--write", default=sys.stdout, help = 'The path to the file where results will be written. ')
+
+	parser.add_argument("inventory",
+		help = 'A file with the correct format for the inventory')
+	parser.add_argument("specs",
+		help = 'A file with the correct format for the specs')
+	parser.add_argument("norm_tab",
+		help = 'A file used for normalize data')
+	parser.add_argument("-w", "--write", default=sys.stdout,
+		help = 'The path to the file where results will be written. ')
+
 	args = parser.parse_args(sys.argv[1:])
+	
 	calculate_score(	_dm.open_file(args.inventory),
 			_dm.open_file(args.specs), 
 			_dm.open_file(args.norm_tab),
