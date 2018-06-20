@@ -72,5 +72,7 @@ def glob (inv, tspec, tab) :
 	size = inv.shape[0]
 	nfeat = len(tspec)
 	nb_mpairs = _mp.n_mpairs(inv, tspec)
+	if _ut.norm_datas(nb_mpairs,tab, size, nfeat) is None :
+		return None
 	nb_imbalance = _ib.n_imbalance(inv, tspec)
 	return (_ut.norm_datas(nb_imbalance,tab, size, nfeat,nb_mpairs))

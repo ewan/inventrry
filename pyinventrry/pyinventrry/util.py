@@ -24,7 +24,8 @@ def seb_hash( tab ) :
 
 def norm_datas(value, normTab, size, nfeat, nmpairs = None):
 	'''
-		Normalize a array of values into its [0-1] equivalent. If nmpairs has only one possibility and nimbalance is asked, return None 
+		Normalize a array of values into its [0-1] equivalent.
+		If nmpairs has only one possibility and nimbalance is asked, return None 
 		:param value: the value to normalize 
 		:param normTab: the normalization array
 		:param size: index
