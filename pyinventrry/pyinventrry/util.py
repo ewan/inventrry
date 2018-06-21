@@ -53,7 +53,10 @@ def norm_datas(value, normTab, size, nfeat, nmpairs = None):
 	length = len(normList)
 	if length == 1 :
 		return _np.nan
-	return normList.index(value)/(length-1)
+	if value in normList :
+		return normList.index(value)/(length-1)
+	else :
+		return _np.nan
 
 def get_true_specs(dictio):
 	'''
