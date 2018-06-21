@@ -4,6 +4,15 @@ import argparse
 import pyinventrry.data_manager as _dm
 
 def splitter(feat, part):
+	'''
+	Split a partition between positive and negative on a specific feature.
+	:param feat: A specific feat
+	:type feat: String
+	:param part: A list of a representation of phones
+	:type part: List of dict objets
+	:return: 2 lists of a representation of phones
+	:rtype: List of dict objets
+	'''
 	plus = []
 	minus = []
 	none = []
@@ -13,14 +22,23 @@ def splitter(feat, part):
 		elif phon[feat] in {'-','0',1,'False'}:
 			minus.append(phon)
 		else :
-			none.append(phon)
+			print('MAJOR ERROR IN INVENTORY FILE')
 
-	return plus, minus, none
+	return plus, minus
 
 def split_by(feat, part, global_part):
-	plus, minus, none = splitter(feat, part)
-	full = len(part)	
-	if ((full == len(plus)) or (full == len(minus)) or (full == len(none))):
+	'''
+	Determine if the feat is a discriming feat or not on the partion given in args.
+	:param feat: The feat to be studied
+	:type feat: string
+	:param part: one partion of the whole inventory
+	:type part: List of dict objets
+	:param global_part: A representation of the inventory as partition.
+	:type global_part: List of dict objets
+	'''
+	plus, minus = splitter(feat, part)
+	full = len(part)
+	if ((full == len(plus)) or (full == len(minus))):
 		global_part.append(part)
 		return False
 
@@ -29,8 +47,6 @@ def split_by(feat, part, global_part):
 			global_part.append(plus)
 		if len(minus)>1 :
 			global_part.append(minus)
-		if len(none) >1 :
-			global_part.append(none)
 		return True
 
 def compare(s, t):
