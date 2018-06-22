@@ -167,30 +167,38 @@ def check_spec(spec, phones):
 
 	return b
 
+def calculate_one (feat_set, phones, feat_dict, df_phones):
+	'''
+
+	'''
+	int_specs = tree_theory(feat_set, [phones])
+		
+	specs = []
+	for int_spec in int_specs :
+		spec = set()
+		for i in int_spec:
+			spec.add(feat_dict[i])
+		if check_spec(spec, df_phones):
+			specs.append(spec)
+	return specs
+
 def calculate_all_specs(file_name,write_specs):
 	inventories, meta_keys, unique_list, feat_list = extract_from_file(file_name)
 	feat_dict = calculate_feat_dict(feat_list)
 	feat_set = set(feat_dict)
-	df = _pd.DataFrame(columns=meta_keys + ['_spec_nb'] + feat_list)
+	df = _pd.DataFrame(columns=meta_keys + ['_spec_id'] + feat_list)
 	df.to_csv(write_specs, mode = 'w', header=True, index=False)
 	for unique in unique_list :
 		df_phones = _dm.extract_data_frame(inventories, unique)
 		
 		phones = extract_phones(df_phones, feat_dict )
-		int_specs = tree_theory(feat_set, [phones])
 		
-		specs = []
-		for int_spec in int_specs :
-			spec = set()
-			for i in int_spec:
-				spec.add(feat_dict[i])
-			if check_spec(spec, df_phones):
-				specs.append(spec)
+		specs = calculate_one(feat_set, phones, feat_dict, df_phones) 
 
 		i = 1
 		for spec in specs :
 			d = dict(unique)
-			d['_spec_nb'] = 'Spec'+str(i)
+			d['_spec_id'] = 'Spec'+str(i)
 			i+=1
 			for feat in feat_list:
 				d[feat] = 'False'

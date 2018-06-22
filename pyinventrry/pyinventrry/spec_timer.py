@@ -22,6 +22,9 @@ def wrapper(func, *args, **kwargs):
 	return wrapped
 
 def calculate_one (feat_set, phones, feat_dict, df_phones):
+	'''
+
+	'''
 	int_specs = _sp.tree_theory(feat_set, [phones])
 		
 	specs = []
@@ -47,7 +50,7 @@ def time_specs(file_name, write_time, write_specs, verbose = False) :
 		df_phones = _dm.extract_data_frame(inventories, unique)
 		phones = _sp.extract_phones(df_phones, feat_dict )
 		
-		wrapped = wrapper(calculate_one,feat_set,phones,feat_dict,df_phones)
+		wrapped = wrapper(_sp.calculate_one,feat_set,phones,feat_dict,df_phones)
 		size = len(phones)
 		
 		time, specs = _ti.timeit(wrapped,setup ="gc.enable"  ,number =1)
@@ -63,7 +66,7 @@ def time_specs(file_name, write_time, write_specs, verbose = False) :
 		i = 1
 		for spec in specs :
 			d = dict(unique)
-			d['_spec_nb'] = 'Spec'+str(i)
+			d['_spec_id'] = 'Spec'+str(i)
 			i+=1
 			for feat in feat_list:
 				d[feat] = False
@@ -98,7 +101,7 @@ def stringer(tab):
 
 def compare(theory, real, unique_list):
 	theo = theory.drop('_spec_id', axis = 1)
-	rea = real.drop('_spec_nb', axis = 1)
+	rea = real.drop('_spec_id', axis = 1)
 	d_t = 0
 	d_r = 0
 	
