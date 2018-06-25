@@ -17,15 +17,9 @@ def calculate_score( inv_whole, spec_whole, norm_tab, write_file ) :
 	:type norm_tab: DataFrame
 	:type write_file: str
 	'''
-	meta_keys = _dm.calculate_meta_keys(inv_whole)
-	if not meta_keys :
-		print('There is an error in the inventory file as no meta information was detected.',file=sys.stderr)
-		return 
+	meta_keys = _dm.calculate_keys(inv_whole)
 	
-	meta_keys_spec = _dm.calculate_meta_keys(spec_whole)
-	if not meta_keys_spec :
-		print('There is an error in the specification file as no meta information was detected',file=sys.stderr)
-		return
+	meta_keys_spec = _dm.calculate_keys(spec_whole)
 	
 	delta_keys = list(set(meta_keys_spec) - set(meta_keys))
 	unique = _dm.calculate_unique(inv_whole,[[]], list(meta_keys))

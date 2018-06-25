@@ -1,8 +1,7 @@
 import sys
 import argparse
 import pandas
-import data_manager as _dm
-
+import pyinventrry.data_manager as _dm
 
 def clean_data_frame(dataframe):
 	"""
@@ -12,10 +11,10 @@ def clean_data_frame(dataframe):
 	:param dataframe: DataFrame
 	:return : The dataframe cleaned.
 	:rtype: DataFrame
-
 	"""
-	duplicates = set(dataframe.replace('0','-').drop_duplicates().index)
-	bad_ones = set(dataframe.index) - duplicates
+	tmp = dataframe.drop( columns = _dm.calculate_keys(dataframe, 'i'))
+	duplicates = set(tmp.replace('0','-').drop_duplicates().index)
+	bad_ones = set(tmp.index) - duplicates
 	final = dataframe.loc[list(set(dataframe.index)-bad_ones)].replace('0','-')
 	final = final.append(dataframe.loc[list(bad_ones)].replace('0','+'))
 	return final.sort_index()

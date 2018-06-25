@@ -22,7 +22,7 @@ def splitter(feat, part):
 		elif phon[feat] in {'-','0',1,'False'}:
 			minus.append(phon)
 		else :
-			print('MAJOR ERROR IN INVENTORY FILE')
+			print('A non-binary value has been found in the file', file = _sys.stderr)
 
 	return plus, minus
 
@@ -50,6 +50,9 @@ def split_by(feat, part, global_part):
 		return True
 
 def compare(s, t):
+	'''
+	Compare two unordored list. Return true if they contains same elements.
+	'''
 	t = list(t)
 	try:
 		for elem in s:
@@ -125,19 +128,28 @@ class Node:
 			return 
 
 def tree_theory(feat_set, phones):
+	'''
+	Initialize and call the specification generator
+	'''
 	top = Node(p = None, s = None, o = set(feat_set), pa = phones, n = {})
 	top.generate()
 	return top.get_specs(acc = [], actual = [])
 
-def extract_from_file(file_name):
-	df = _dm.open_file(file_name)
-	meta_keys = _dm.calculate_meta_keys(df)
+def extract_from_file(file_name, force_csv):
+	'''
+	Open a file, split meta-information and standart information, calculate unique meta-information
+	'''
+	df = _dm.open_file(file_name, force_csv)
+	meta_keys = _dm.calculate_keys(df)
+	df = df.drop( columns = _dm.calculate_keys(df, 'i') )
 	if not meta_keys :
-		print('There is an error in the inventory file as no meta information was detected.',file=_sys.stderr)
-		return 
-	return df, meta_keys, _dm.calculate_unique(df,[[]], list(meta_keys)), _dm.calculate_normal_keys(df)
+		return df, [],[[]] , _dm.calculate_keys(df, 'n')
+	return df, meta_keys, _dm.calculate_unique(df,[[]], list(meta_keys)), _dm.calculate_keys(df, 'n')
 
 def calculate_feat_dict(features):
+	'''
+	Turn a list of feature into a dict of feature --> int, for better indexing.
+	'''
 	feat_dict = {}
 	i = 0
 	for f in features :
@@ -146,6 +158,9 @@ def calculate_feat_dict(features):
 	return feat_dict
 
 def extract_phones(data_frame, feat_dict):
+	'''
+	Extract phones and turn them into list using the featuring to index dictionnary.
+	'''
 	tmp_phones = data_frame.to_dict('records')
 	phones = []
 	for p in tmp_phones :
@@ -156,6 +171,9 @@ def extract_phones(data_frame, feat_dict):
 	return phones
 	
 def check_spec(spec, phones):
+	'''
+	Check if a specification is correct or no.
+	'''
 	b = True
 	for feat in spec:
 		s = set(spec)
@@ -182,8 +200,8 @@ def calculate_one (feat_set, phones, feat_dict, df_phones):
 			specs.append(spec)
 	return specs
 
-def calculate_all_specs(file_name,write_specs):
-	inventories, meta_keys, unique_list, feat_list = extract_from_file(file_name)
+def calculate_all_specs(file_name, write_specs, force_csv):
+	inventories, meta_keys, unique_list, feat_list = extract_from_file(file_name, force_csv)
 	feat_dict = calculate_feat_dict(feat_list)
 	feat_set = set(feat_dict)
 	df = _pd.DataFrame(columns=meta_keys + ['_spec_id'] + feat_list)
@@ -210,12 +228,16 @@ def calculate_all_specs(file_name,write_specs):
 
 def main() :
 	parser = argparse.ArgumentParser()
-	parser.add_argument("inventory", help = 'A file with the correct format for the inventory')
-	parser.add_argument("-w", "--write", default=_sys.stdout,)
+	parser.add_argument("inventory",
+		help = 'A file with the correct format for the inventory')
+	parser.add_argument("-o", "--output", default=_sys.stdout,
+		help = 'The destination file')
+	parser.add_argument("-f", "--force_csv", action = 'store_true',
+		help = 'Force the file to be considered as a csv')
 	args = parser.parse_args(_sys.argv[1:])
 	file_name = args.inventory
-	write_file = args.write
-	df = calculate_all_specs(file_name, write_file)
+	write_file = args.output
+	df = calculate_all_specs(file_name, write_file, args.force_csv)
 	df.to_csv(write_file, mode = 'w', header=True, index=False)
 
 if __name__ == "__main__":

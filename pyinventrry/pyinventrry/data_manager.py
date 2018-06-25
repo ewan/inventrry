@@ -1,6 +1,6 @@
 import pandas as pd
 
-def open_file(argument):
+def open_file(argument, force_csv= False):
 	'''
 	Check file type and open it correctly
 	:param argument: The path to the file
@@ -8,12 +8,12 @@ def open_file(argument):
 	:return: the corresponding DataFrame
 	:rtype: DataFrame
 	'''
-	if (argument[-3:]=='csv'):
+	if (argument[-3:]=='csv') or force_csv :
 		return pd.read_csv(argument)
 	else :
 		return pd.read_feather(argument)
 
-def calculate_normal_keys(data_frame):
+def calculate_keys(data_frame, mode = 'm'):
 	'''
 	Find all colummns name which don't start with an underscore
 	:param data_frame: the DataFrame to analyse.
@@ -21,27 +21,24 @@ def calculate_normal_keys(data_frame):
 	:return: the list of all meta keys of the DataFrame
 	:rtype: string array
 	'''
-	all = [ x for x in data_frame ]
-	meta = []
-	for k in all :
-		if not (k=='' or k[0]=='_') :
-			meta.append(k)
-	return meta
+	if mode not in {'m', 'i', 'n', 'meta', 'intel', 'normal'}:
+		pass
 
-def calculate_meta_keys(data_frame):
-	'''
-	Find all colummns name which start with an underscore
-	:param data_frame: the DataFrame to analyse.
-	:type data_frame: DataFrame
-	:return: the list of all meta keys of the DataFrame
-	:rtype: string array
-	'''
 	all = [ x for x in data_frame ]
-	meta = []
-	for k in all :
-		if k=='' or k[0]=='_' :
-			meta.append(k)
-	return meta
+	keys = []
+	if mode in {'m', 'meta'} :
+		for k in all :
+			if k=='' or k[0]=='_' :
+				keys.append(k)
+	elif mode in {'i', 'intel'} :
+		for k in all :
+			if k[0]=='*' :
+				keys.append(k)
+	else :
+		for k in all :
+			if not (k[0]=='*' or k=='' or k[0]=='_' ):
+				keys.append(k)
+	return keys
 
 def calculate_unique(data_frame, acc, meta):
 	'''
@@ -56,6 +53,8 @@ def calculate_unique(data_frame, acc, meta):
 	:rtype: tuple array array
 	'''
 	new_acc = []
+	if not meta :
+		return [[]]
 	m_key = meta.pop()
 	for k in acc :
 		tmp = pd.DataFrame(data_frame)

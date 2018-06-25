@@ -21,23 +21,8 @@ def wrapper(func, *args, **kwargs):
 		return func(*args, **kwargs)
 	return wrapped
 
-def calculate_one (feat_set, phones, feat_dict, df_phones):
-	'''
-
-	'''
-	int_specs = _sp.tree_theory(feat_set, [phones])
-		
-	specs = []
-	for int_spec in int_specs :
-		spec = set()
-		for i in int_spec:
-			spec.add(feat_dict[i])
-		if _sp.check_spec(spec, df_phones):
-			specs.append(spec)
-	return specs
-
-def time_specs(file_name, write_time, write_specs, verbose = False) :	
-	inventories, meta_keys, unique_list, feat_list = _sp.extract_from_file(file_name)
+def time_specs(file_name, write_time, write_specs, verbose = False, force_csv) :	
+	inventories, meta_keys, unique_list, feat_list = _sp.extract_from_file(file_name, force_csv)
 	feat_dict = _sp.calculate_feat_dict(feat_list)
 	feat_set = set(feat_dict)
 	time_dict = {}
@@ -126,16 +111,24 @@ def compare(theory, real, unique_list):
 
 def main() :
 	parser = argparse.ArgumentParser()
-	parser.add_argument("inventory", help = 'A file with the correct format for the inventory')
-	parser.add_argument("theory", help = 'The original spec file')
-	parser.add_argument("-t", "--time_file", default=_sys.stdout)
-	parser.add_argument("-s", "--specs_file", default=_sys.stdout)
-	parser.add_argument("--verbose", action = 'store_true')
+	parser.add_argument("inventory",
+		help = 'A file with the correct format for the inventory')
+	parser.add_argument("theory",
+		help = 'The original spec file')
+	parser.add_argument("-t", "--time_file", default=_sys.stdout,
+		help = 'The path to where will be stored time calcule information')
+	parser.add_argument("-s", "--specs_file", default=_sys.stdout,
+		help = 'The path to where will be stored time calcule information')
+	parser.add_argument("--verbose", action = 'store_true',
+		help = '')
+	parser.add_argument("-f", "--force_csv", action = 'store_true',
+		help = 'Force the file to be considered as a csv')
 	args = parser.parse_args(_sys.argv[1:])
 	file_name = args.inventory
 	write_time = args.time_file
 	write_specs = args.specs_file
-	time_frame, spec_frame, unique_list = time_specs(file_name, write_time, write_specs, args.verbose)
+	time_frame, spec_frame, unique_list = time_specs(file_name, write_time, write_specs,
+		args.verbose, args.force_csv)
 	time_frame.to_csv(write_time, mode = 'w', header=True, index=False)
 	theory_frame = _dm.open_file(args.theory)
 	compare(theory_frame, spec_frame, unique_list)
