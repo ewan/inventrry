@@ -22,7 +22,7 @@ def stat (inv, tspec, tab, normalize = False) :
 		eco = econ(inv, tspec)
 	loca = loc(inv, tspec, tab)
 	globa = glob(inv, tspec, tab)
-	if normalize
+	if normalize :
 		return (eco, loca, globa)
 	return (inv.shape[0], len(tspec), loca, glob)
 
