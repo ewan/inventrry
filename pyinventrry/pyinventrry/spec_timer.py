@@ -21,7 +21,7 @@ def wrapper(func, *args, **kwargs):
 		return func(*args, **kwargs)
 	return wrapped
 
-def time_specs(file_name, write_time, write_specs, verbose = False, force_csv) :	
+def time_specs(file_name, write_time, write_specs, verbose = False, force_csv = False) :	
 	inventories, meta_keys, unique_list, feat_list = _sp.extract_from_file(file_name, force_csv)
 	feat_dict = _sp.calculate_feat_dict(feat_list)
 	feat_set = set(feat_dict)
