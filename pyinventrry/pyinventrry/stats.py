@@ -3,7 +3,7 @@ __all__ = ['stat', 'econ', 'loc', 'glob']
 from pyinventrry.score import ecovalue as _ev, mpairs as _mp, imbalance as _ib
 import pyinventrry.util as _ut
 
-def stat (inv, tspec, tab, normalize = False) :
+def stat (inv, tspec, tab = None ) :
 	'''
 
 		Calculate the economic score, the local score and the global score
@@ -18,12 +18,12 @@ def stat (inv, tspec, tab, normalize = False) :
 		:rtype: double tuple
 
 	'''
-	if normalize :
+	if tab is not None :
 		eco = econ(inv, tspec)
-	loca = loc(inv, tspec, tab)
-	globa = glob(inv, tspec, tab)
-	if normalize :
-		return (eco, loca, globa)
+	loca = loc(inv, tspec, tab, normalize)
+	globa = glob(inv, tspec, tab, normalize)
+	if tab is not None :
+		return (None, eco, loca, globa)
 	return (inv.shape[0], len(tspec), loca, glob)
 
 def econ(inv, tspec) : 
@@ -41,7 +41,7 @@ def econ(inv, tspec) :
 	nfeat = len(tspec)
 	return _ev.econ_value(size, nfeat)
 
-def loc (inv, tspec, tab, normalize = False) :  
+def loc (inv, tspec, tab = None) :  
 	'''
 		Calcutate the local score
 		:param inv: an inventory
@@ -57,11 +57,11 @@ def loc (inv, tspec, tab, normalize = False) :
 	size = inv.shape[0]
 	nfeat = len(tspec)
 	nb_mpairs = _mp.n_mpairs(inv, tspec)
-	if normalize :
+	if tab is not None :
 		return (_ut.norm_datas(nb_mpairs,tab, size, nfeat))
 	return nb_mpairs
 	
-def glob (inv, tspec, tab) : 
+def glob (inv, tspec, tab = None) : 
 	'''
 		Calcutate the global score
 		:param inv: an inventory
@@ -80,6 +80,6 @@ def glob (inv, tspec, tab) :
 	if _ut.norm_datas(nb_mpairs,tab, size, nfeat) is None :
 		return None
 	nb_imbalance = _ib.n_imbalance(inv, tspec)
-	if normalize :
+	if tab is not None :
 		return (_ut.norm_datas(nb_imbalance,tab, size, nfeat,nb_mpairs))
 	return n_imbalance

@@ -33,12 +33,17 @@ def calculate_score( inv_whole, spec_whole, norm_tab, write_file ) :
 		for s_key in spec_keys :
 			result = _pd.DataFrame(columns=meta_keys + delta_keys +['econ','loc','glob'])
 			x = (_dm.extract_data_frame(spe,s_key))
-
-			e, l, g = _pi.stats.stat(inv, (_ut.get_true_specs(x.iloc[0].to_dict())),norm_tab)
 			d = dict(t+s_key)
-			d['econ'] = e
-			d['loc'] = l
-			d['glob'] = g
+			s, e_f, l, g = _pi.stats.stat(inv, (_ut.get_true_specs(x.iloc[0].to_dict())),norm_tab)
+			if norm_tab is None :
+				d['size'] = e_f
+				d['nfeat'] = s
+				d['nmpairs'] = l
+				d['nimbalance'] = g
+			else :
+				d['econ'] = e_f
+				d['loc'] = l
+				d['glob'] = g
 			result = result.append(d, ignore_index=True)
 			result.to_csv(write_file, mode = 'a', header=False, index=False)
 
@@ -49,7 +54,7 @@ def main():
 		help = 'A file with the correct format for the inventory')
 	parser.add_argument("specs",
 		help = 'A file with the correct format for the specs')
-	parser.add_argument("norm_tab",
+	parser.add_argument(" -n", "--norm_tab", default = None
 		help = 'A file used for normalize data')
 	parser.add_argument("-w", "--write", default=sys.stdout,
 		help = 'The path to the file where results will be written. ')

@@ -58,8 +58,8 @@ def norm_datas(value, normTab, size, nfeat, nmpairs = None):
 	else :
 		if nmpairs is None : 
 			return _np.nan
-		normTab = normTab.append({'size':size, 'nfeat':nfeat, 'nmpairs':nmpairs, 'nimbalance':value}, ignore_index = True)
-		return norm_datas(value, normTab, size, nfeat, nmpairs)
+		tmp_tab = normTab.append({'size':size, 'nfeat':nfeat, 'nmpairs':nmpairs, 'nimbalance':value}, ignore_index = True)
+		return norm_datas(value, tmp_tab, size, nfeat, nmpairs)
 
 def get_true_specs(dictio):
 	'''
