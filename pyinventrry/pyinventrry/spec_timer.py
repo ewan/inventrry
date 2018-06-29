@@ -83,6 +83,7 @@ def stringer(tab):
 			s+='T'
 		else :
 			s+='F'
+	return s
 
 def compare(theory, real, unique_list):
 	theo = theory.drop('_spec_id', axis = 1)
