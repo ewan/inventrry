@@ -26,6 +26,7 @@ setup(
 		['calculate_score=pyinventrry.scoreCalcule:main',
 		'calculate_specs=pyinventrry.spec:main',
 		'calculate_time_specs=pyinventrry.spec_timer:main',
+		'calculate_rank=pyinventrry.rankCalcule:main',
 		'clean_inventory=pyinventrry.clean:main']},
 	zip_safe=False
 )

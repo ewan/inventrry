@@ -20,11 +20,11 @@ def stat (inv, tspec, tab = None ) :
 	'''
 	if tab is not None :
 		eco = econ(inv, tspec)
-	loca = loc(inv, tspec, tab, normalize)
-	globa = glob(inv, tspec, tab, normalize)
+	loca = loc(inv, tspec, tab)
+	globa = glob(inv, tspec, tab)
 	if tab is not None :
 		return (None, eco, loca, globa)
-	return (inv.shape[0], len(tspec), loca, glob)
+	return (inv.shape[0], len(tspec), loca, globa)
 
 def econ(inv, tspec) : 
 	'''
@@ -77,9 +77,9 @@ def glob (inv, tspec, tab = None) :
 	size = inv.shape[0]
 	nfeat = len(tspec)
 	nb_mpairs = _mp.n_mpairs(inv, tspec)
-	if _ut.norm_datas(nb_mpairs,tab, size, nfeat) is None :
-		return None
 	nb_imbalance = _ib.n_imbalance(inv, tspec)
 	if tab is not None :
+		if _ut.norm_datas(nb_mpairs,tab, size, nfeat) is None :
+			return None
 		return (_ut.norm_datas(nb_imbalance,tab, size, nfeat,nb_mpairs))
-	return n_imbalance
+	return nb_imbalance
