@@ -238,7 +238,7 @@ def main() :
     args = parser.parse_args(_sys.argv[1:])
     file_name = args.inventory
     write_file = args.output
-    ignore_columns = args.ignore_columns.split(',')
+    ignore_columns = filter(None, args.ignore_columns.split(','))
     df = calculate_all_specs(file_name, write_file, args.force_csv,
             ignore_columns)
 
