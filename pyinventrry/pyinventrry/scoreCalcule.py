@@ -73,7 +73,7 @@ def main():
     if args.norm_tab is None :
         norm_tab = None
     else:
-        norm_tab = _dm.open_file(args.norm_tab),
+        norm_tab = _dm.open_file(args.norm_tab)
     calculate_score(inv, specs, norm_tab, args.write)
 
 if __name__ == "__main__":
