@@ -2,6 +2,9 @@
 
 R package for calculating geometry statistics of sound inventories (or in fact any set that comes with a binary encoding).
 
+subSebastian branch is up to date: note that the 'glob' score provided on that branch is backwards, and should be corrected
+to 1- in future.
+
 ###Setup
 
 This package calls Python code using the PythonInR package. On Unix systems, PythonInR will by default be linked to whatever libpython it finds first (i.e., the default Python installation). If you're not using your default Python installation, you may have to recompile PythonInR from source, so that the shared object file that's generated won't link to the wrong version of libpython.
